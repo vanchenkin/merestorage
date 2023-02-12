@@ -1,22 +1,30 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
-import { MainPage } from "../../pages/MainPage";
+import { Layout } from "antd";
+import { Header } from "../Header/Header";
+import { Router } from "./Router";
+import { useAppSelector } from "../../store/store";
 
-export const App: React.FC = () => (
-    <Routes>
-        {/* <Route path="/filters" element={<FiltersPage />} />
-            <Route path="/filters/:owner/:name" element={<FiltersPage />} />
-            <Route
-                path="/player/:appId/:uid/:env"
-                element={<PlayerWrapper />}
-            />
-            <Route path="/apps">
-                <Route path="" element={<AppListPage />} />
-                <Route path="new" element={<CreateAppIdPage />} />
-                <Route path=":appid/new" element={<CreateAppIdPage />} />
-                <Route path=":appid/*" element={<AppPage />} />
-            </Route>
-            <Route path="*" element={<PartOfAppWithHeader />} /> */}
-        <Route path="/" element={<MainPage />} />
-    </Routes>
-);
+export const App: React.FC = () => {
+    const project = useAppSelector((state) => state.context.project);
+
+    return (
+        <Layout>
+            <Layout.Header
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    backgroundColor: "white",
+                    justifyContent: "space-between",
+                    paddingInline: "10%",
+                    boxShadow: "0px 2px 8px 0px rgba(240, 241, 242, 1)",
+                    zIndex: 100,
+                }}
+            >
+                <Header hideMenu={!Boolean(project)} />
+            </Layout.Header>
+            <Layout.Content style={{ backgroundColor: "white" }}>
+                <Router />
+            </Layout.Content>
+        </Layout>
+    );
+};

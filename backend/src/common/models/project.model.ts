@@ -1,3 +1,5 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { IsString } from "class-validator";
 import { BaseModel } from "./base.model";
 
 export class Project extends BaseModel {
@@ -5,9 +7,7 @@ export class Project extends BaseModel {
         return "projects";
     }
 
-    static get idColumn() {
-        return "id";
-    }
-
+    @IsString()
+    @ApiProperty()
     name: string;
 }

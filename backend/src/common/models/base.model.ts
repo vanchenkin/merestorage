@@ -1,7 +1,6 @@
 import { Model } from "objection";
 
 export class BaseModel extends Model {
-    static get idColumn() {
-        return "id";
-    }
+    readonly created_at: Date;
+    readonly updated_at: Date;
 }

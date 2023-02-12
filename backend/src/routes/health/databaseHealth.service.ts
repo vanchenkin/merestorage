@@ -18,6 +18,7 @@ export class DatabaseHealthIndicator extends HealthIndicator {
             return super.getStatus(key, true);
         } catch (error) {
             const status = super.getStatus(key, false, {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 message: (error as any).message,
             });
             throw new HealthCheckError("Unable to connect to database", status);

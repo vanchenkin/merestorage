@@ -1,15 +1,41 @@
-import { configureStore, Dispatch } from "@reduxjs/toolkit";
+import {
+    configureStore,
+    Dispatch,
+    isRejectedWithValue,
+    Middleware,
+} from "@reduxjs/toolkit";
+import { notification } from "antd";
 import { TypedUseSelectorHook } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
+import { contextReducer } from "./context/contextSlice";
+import { projectsApi } from "./projects/projectsApi";
 
-export const Store = configureStore({
-    reducer: {},
+export const notificator: Middleware = () => (next) => (action) => {
+    if (isRejectedWithValue(action)) {
+        notification.error({
+            message: action?.payload?.data?.message ?? "Что-то пошло не так",
+        });
+    }
+
+    return next(action);
+};
+
+export const store = configureStore({
+    reducer: {
+        [projectsApi.reducerPath]: projectsApi.reducer,
+        context: contextReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware()
+            .concat(notificator)
+            .concat([projectsApi.middleware]),
 });
 
 // Определяем тип, возвращаемый стором
-export type RootStateType = ReturnType<typeof Store.getState>;
+export type RootStateType = ReturnType<typeof store.getState>;
 // Определяем тип dispatch, зависимый от стора. С any хак чтобы асинхронные экшены работали из коробки
-export type AppDispatchType = typeof Store.dispatch & Dispatch<any>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AppDispatchType = typeof store.dispatch & Dispatch<any>;
 export type GetStateFuncType = () => RootStateType;
 
 // Создаем типизированные версии `useDispatch` and `useSelector`

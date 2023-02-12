@@ -18,7 +18,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     catch(exception: ExceptionType, host: ArgumentsHost): void {
         const { httpAdapter } = this.httpAdapterHost;
-
         const ctx = host.switchToHttp();
 
         const httpStatus =
@@ -26,13 +25,20 @@ export class AllExceptionsFilter implements ExceptionFilter {
                 ? exception.getStatus()
                 : HttpStatus.INTERNAL_SERVER_ERROR;
 
+        let message;
+
+        if (exception instanceof HttpException) {
+            message = exception.message;
+        } else {
+            this.logger.error(exception.message, "exception");
+        }
+
         const responseBody = {
             statusCode: httpStatus,
             timestamp: new Date().toISOString(),
             path: httpAdapter.getRequestUrl(ctx.getRequest()),
+            message,
         };
-
-        this.logger.error(exception.message, "exception");
 
         if (process.env.NODE_ENV === "dev") console.log(exception);
 
