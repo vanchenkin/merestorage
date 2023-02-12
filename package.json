@@ -33,7 +33,6 @@
         "@nestjs/core": "9.3.8",
         "@nestjs/platform-express": "9.3.8",
         "@nestjs/schedule": "2.2.0",
-        "@nestjs/serve-static": "3.0.1",
         "@nestjs/swagger": "6.2.1",
         "@nestjs/terminus": "9.2.0",
         "@reduxjs/toolkit": "1.9.2",
