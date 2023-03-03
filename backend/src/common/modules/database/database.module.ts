@@ -6,6 +6,7 @@ import { BaseModel } from "../../models/base.model";
 import { Knex } from "knex";
 import { Project } from "../../models/project.model";
 import configurations from "../../../config/configurations";
+import { Resource } from "../../models/resource.model";
 
 export const getKnexConfig = async (
     config: ConfigService
@@ -39,7 +40,7 @@ export const getKnexConfig = async (
                 };
             },
         }),
-        ObjectionModule.forFeature([Project]),
+        ObjectionModule.forFeature([Project, Resource]),
     ],
     exports: [ObjectionModule],
 })
