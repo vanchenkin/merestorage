@@ -9,6 +9,7 @@ import { TypedUseSelectorHook } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
 import { contextReducer } from "./context/contextSlice";
 import { projectsApi } from "./projects/projectsApi";
+import { resourcesApi } from "./resources/resourcesApi";
 
 export const notificator: Middleware = () => (next) => (action) => {
     if (isRejectedWithValue(action)) {
@@ -23,12 +24,13 @@ export const notificator: Middleware = () => (next) => (action) => {
 export const store = configureStore({
     reducer: {
         [projectsApi.reducerPath]: projectsApi.reducer,
+        [resourcesApi.reducerPath]: resourcesApi.reducer,
         context: contextReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
             .concat(notificator)
-            .concat([projectsApi.middleware]),
+            .concat([projectsApi.middleware, resourcesApi.middleware]),
 });
 
 // Определяем тип, возвращаемый стором

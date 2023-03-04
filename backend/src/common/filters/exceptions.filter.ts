@@ -1,5 +1,6 @@
 import {
     ArgumentsHost,
+    BadRequestException,
     Catch,
     ExceptionFilter,
     HttpAdapterHost,
@@ -9,6 +10,7 @@ import {
 } from "@nestjs/common";
 
 export type ExceptionType = HttpException | Error;
+export type BadRequestResponseType = string | { message: string };
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -27,7 +29,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
         let message;
 
-        if (exception instanceof HttpException) {
+        if (exception instanceof BadRequestException) {
+            const exceptionResponse =
+                exception.getResponse() as BadRequestResponseType;
+
+            if (typeof exceptionResponse === "string") {
+                message = exceptionResponse;
+            } else {
+                message = exceptionResponse.message;
+            }
+        } else if (exception instanceof HttpException) {
             message = exception.message;
         } else {
             this.logger.error(exception.message, "exception");

@@ -34,6 +34,7 @@ const MainPage: React.FC = () => {
                     width: "250px",
                 }}
                 size="large"
+                navigateAfterSelect
             />
             <div className={styles.blockGrid}>
                 <div>

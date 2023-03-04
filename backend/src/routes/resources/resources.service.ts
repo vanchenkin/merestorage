@@ -1,23 +1,31 @@
-import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { Project } from "../../common/models/project.model";
-import { Resource } from "../../common/models/resource.model";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { Project, Resource, ResourceType } from "@prisma/client";
+import { PrismaService } from "../../common/modules/database/prisma.service";
+import { encrypt } from "../../common/utils/encrypt";
 import { CreateResourceDto } from "./dto/createResource.dto";
+import { ConnectionData } from "./types/resourceTypeConnectionMapper";
 
 @Injectable()
 export class ResourcesService {
     private readonly logger = new Logger(ResourcesService.name);
 
-    constructor(
-        @Inject(Resource) private readonly resourceModel: typeof Resource
-    ) {}
+    constructor(private db: PrismaService) {}
 
     async create(
         project: Project,
         resource: CreateResourceDto
     ): Promise<Resource> {
-        const createdResource = await project
-            .$relatedQuery<Resource>("resources")
-            .insert(resource);
+        const credentials = encrypt(resource.credentials);
+
+        const createdResource = await this.db.resource.create({
+            data: {
+                project: {
+                    connect: { id: project.id },
+                },
+                ...resource,
+                credentials,
+            },
+        });
 
         this.logger.log({ name: createdResource.name }, "resource created");
 
@@ -25,7 +33,7 @@ export class ResourcesService {
     }
 
     async get(id: number): Promise<Resource> {
-        const resource = await this.resourceModel.query().findById(id);
+        const resource = await this.db.resource.findUnique({ where: { id } });
         if (!resource) {
             throw new NotFoundException("Ресурс не найден");
         }
@@ -33,11 +41,15 @@ export class ResourcesService {
     }
 
     async getByProject(project: Project): Promise<Resource[]> {
-        return await project.$relatedQuery<Resource>("resources");
+        return await this.db.resource.findMany({ where: { project } });
     }
 
     async remove(id: number): Promise<void> {
         await this.get(id);
-        await this.resourceModel.query().deleteById(id);
+        await this.db.resource.delete({ where: { id } });
+    }
+
+    async check(type: ResourceType, data: ConnectionData): Promise<void> {
+        return;
     }
 }

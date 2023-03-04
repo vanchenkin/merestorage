@@ -2,6 +2,7 @@ import { CloseCircleFilled, PlusOutlined } from "@ant-design/icons";
 import { Button, Divider, Input, Select, Space } from "antd";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import React, { CSSProperties, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { selectProject } from "../../store/context/contextSlice";
 import {
     useCreateProjectMutation,
@@ -14,14 +15,17 @@ import { ConfirmModal } from "../ConfirmModal/ConfirmModal";
 type ProjectSelectProps = {
     style?: CSSProperties;
     size?: SizeType;
+    navigateAfterSelect?: boolean;
 };
 
 export const ProjectSelect: React.FC<ProjectSelectProps> = ({
     style,
     size,
+    navigateAfterSelect,
 }) => {
     const dispatch = useAppDispatch();
     const project = useAppSelector((state) => state.context.project);
+    const navigate = useNavigate();
 
     const { data: projects, isLoading: isLoadingAll } =
         useGetAllProjectsQuery();
@@ -34,7 +38,10 @@ export const ProjectSelect: React.FC<ProjectSelectProps> = ({
     const [name, setName] = useState("");
 
     const handleSelect = (value: number) => {
-        if (!selectLocked) dispatch(selectProject(value));
+        if (!selectLocked) {
+            dispatch(selectProject(value));
+            if (navigateAfterSelect) navigate("/reports");
+        }
     };
 
     const handleCreateProject = () => {
@@ -51,7 +58,7 @@ export const ProjectSelect: React.FC<ProjectSelectProps> = ({
     return (
         <>
             <Select
-                style={{ width: 250, ...style }}
+                style={{ minWidth: 200, ...style }}
                 size={size || "middle"}
                 onChange={handleSelect}
                 placeholder="Выберите проект..."

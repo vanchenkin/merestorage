@@ -40,17 +40,25 @@ export const Header: React.FC<HeaderProps> = ({ hideMenu }) => {
                 style={{
                     display: "flex",
                     flexDirection: "row",
+                    justifyContent: "end",
                     alignItems: "center",
+                    width: "100%",
                 }}
             >
                 {!hideMenu && (
-                    <Menu
-                        mode="horizontal"
-                        items={items}
-                        selectedKeys={currentKey}
-                        onSelect={handleSelect}
-                        disabledOverflow={true}
-                    />
+                    <div style={{ width: "100%" }}>
+                        <Menu
+                            style={{
+                                minWidth: 0,
+                                justifyContent: "end",
+                            }}
+                            mode="horizontal"
+                            items={items}
+                            selectedKeys={currentKey}
+                            onSelect={handleSelect}
+                            // disabledOverflow={true}
+                        />
+                    </div>
                 )}
 
                 <ProjectSelect />

@@ -1,8 +1,8 @@
 import { IsString } from "class-validator";
-import { Transform, TransformFnParams } from "class-transformer";
+import { Trim } from "../../../common/decorators/trim.decorator";
 
 export class CreateProjectDto {
     @IsString()
-    @Transform(({ value }: TransformFnParams) => value?.trim())
+    @Trim()
     readonly name: string;
 }

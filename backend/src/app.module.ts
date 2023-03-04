@@ -10,6 +10,7 @@ import { MetricsConfig } from "./config/metrics/metrics.config";
 import { ProjectsModule } from "./routes/projects/projects.module";
 import { HealthModule } from "./routes/health/health.module";
 import { ResourcesModule } from "./routes/resources/resources.module";
+import { PrismaModule } from "./common/modules/database/prisma.module";
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { ResourcesModule } from "./routes/resources/resources.module";
         }),
         ScheduleModule.forRoot(),
         HealthModule,
+        PrismaModule,
         // роуты
         ProjectsModule,
         ResourcesModule,

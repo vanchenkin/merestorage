@@ -1,26 +1,31 @@
-import { Project } from "@prisma/client";
+import { Project, Resource } from "@prisma/client";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { notification } from "antd";
 import { Config } from "../../config";
 
-export const projectsApi = createApi({
-    reducerPath: "projectsApi",
-    baseQuery: fetchBaseQuery({ baseUrl: `${Config.ApiUrl}/projects` }),
-    tagTypes: ["Projects"],
+export type CreateResourceProps = {
+    projectId: Project["id"];
+    resource: Partial<Resource>;
+};
+
+export const resourcesApi = createApi({
+    reducerPath: "resourcesApi",
+    baseQuery: fetchBaseQuery({ baseUrl: `${Config.ApiUrl}/` }),
+    tagTypes: ["Resources"],
     endpoints: (builder) => ({
-        getAllProjects: builder.query<Project[], void>({
-            query: () => `/`,
-            providesTags: ["Projects"],
+        getAllResources: builder.query<Resource[], Project["id"]>({
+            query: (projectId) => `/projects/${projectId}/resources`,
+            providesTags: ["Resources"],
         }),
-        createProject: builder.mutation<Project, Partial<Project>>({
-            query(body) {
+        createResource: builder.mutation<Resource, CreateResourceProps>({
+            query(props) {
                 return {
-                    url: `/`,
+                    url: `/projects/${props.projectId}/resources`,
                     method: "POST",
-                    body,
+                    body: props.resource,
                 };
             },
-            invalidatesTags: ["Projects"],
+            invalidatesTags: ["Resources"],
             async onQueryStarted(_, { queryFulfilled }) {
                 queryFulfilled.then(() => {
                     notification.success({
@@ -29,17 +34,17 @@ export const projectsApi = createApi({
                 });
             },
         }),
-        removeProject: builder.mutation<Project, Project["id"]>({
+        removeResource: builder.mutation<Resource, Resource["id"]>({
             query(id) {
                 return {
-                    url: `/`,
+                    url: `/resources`,
                     method: "DELETE",
                     body: {
                         id,
                     },
                 };
             },
-            invalidatesTags: ["Projects"],
+            invalidatesTags: ["Resources"],
             async onQueryStarted(_, { queryFulfilled }) {
                 queryFulfilled.then(() => {
                     notification.success({
@@ -52,7 +57,7 @@ export const projectsApi = createApi({
 });
 
 export const {
-    useGetAllProjectsQuery,
-    useCreateProjectMutation,
-    useRemoveProjectMutation,
-} = projectsApi;
+    useGetAllResourcesQuery,
+    useCreateResourceMutation,
+    useRemoveResourceMutation,
+} = resourcesApi;

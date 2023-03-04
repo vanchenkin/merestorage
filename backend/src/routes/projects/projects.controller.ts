@@ -1,10 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    Post,
+} from "@nestjs/common";
 import {
     ApiBadRequestResponse,
     ApiNotFoundResponse,
     ApiTags,
 } from "@nestjs/swagger";
-import { Project } from "../../common/models/project.model";
+import { Project } from "@prisma/client";
 import { CreateProjectDto } from "./dto/createProject.dto";
 import { RemoveProjectDto } from "./dto/removeProject.dto";
 import { ProjectsService } from "./projects.service";
@@ -29,7 +37,7 @@ export class ProjectsController {
     @ApiNotFoundResponse({
         description: "Проект не найден",
     })
-    async get(@Param("id") id: number): Promise<Project> {
+    async get(@Param("id", ParseIntPipe) id: number): Promise<Project> {
         return this.projectsService.get(id);
     }
 

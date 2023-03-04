@@ -14,12 +14,12 @@ export class HealthController {
     @Get("/healthz")
     @HealthCheck()
     healthz() {
-        return this.health.check([() => this.db.ping("database")]);
+        return this.health.check([() => this.db.isHealthy("database")]);
     }
 
     @Get("/readyz")
     @HealthCheck()
     readinez() {
-        return this.health.check([() => this.db.ping("database")]);
+        return this.health.check([() => this.db.isHealthy("database")]);
     }
 }

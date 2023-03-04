@@ -1,27 +1,23 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import {
-    HealthIndicatorResult,
-    HealthIndicator,
     HealthCheckError,
+    HealthIndicator,
+    HealthIndicatorResult,
 } from "@nestjs/terminus";
-import { Connection, KNEX_CONNECTION } from "@willsoto/nestjs-objection";
+import { PrismaService } from "../../common/modules/database/prisma.service";
 
 @Injectable()
 export class DatabaseHealthIndicator extends HealthIndicator {
-    constructor(@Inject(KNEX_CONNECTION) public connection: Connection) {
+    constructor(private readonly prismaService: PrismaService) {
         super();
     }
 
-    async ping(key = "db-primary"): Promise<HealthIndicatorResult> {
+    async isHealthy(key: string): Promise<HealthIndicatorResult> {
         try {
-            await this.connection.raw("SELECT 1");
-            return super.getStatus(key, true);
-        } catch (error) {
-            const status = super.getStatus(key, false, {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                message: (error as any).message,
-            });
-            throw new HealthCheckError("Unable to connect to database", status);
+            await this.prismaService.$queryRaw`SELECT 1`;
+            return this.getStatus(key, true);
+        } catch (e) {
+            throw new HealthCheckError("Prisma check failed", e);
         }
     }
 }

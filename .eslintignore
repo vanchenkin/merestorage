@@ -1,4 +1,3 @@
-backend/src/database/migrations
 dist/
 coverage/
 node_modules/

@@ -4,18 +4,15 @@ import {
     Delete,
     Get,
     Param,
+    ParseIntPipe,
     Post,
     UseGuards,
 } from "@nestjs/common";
-import {
-    ApiBadRequestResponse,
-    ApiNotFoundResponse,
-    ApiTags,
-} from "@nestjs/swagger";
-import { Project } from "../../common/models/project.model";
-import { Resource } from "../../common/models/resource.model";
+import { ApiNotFoundResponse, ApiTags } from "@nestjs/swagger";
+import { Project, Resource } from "@prisma/client";
 import { RetrievedProject } from "../projects/decorators/project.decorator";
 import { RetrieveProjectGuard } from "../projects/guards/project.guard";
+import { CheckResourceDto } from "./dto/checkResource.dto";
 import { CreateResourceDto } from "./dto/createResource.dto";
 import { RemoveResourceDto } from "./dto/removeProject.dto";
 
@@ -29,7 +26,7 @@ export class ResourcesController {
     /**
      * Получить все ресурсы проекта
      */
-    @UseGuards(RetrieveProjectGuard("id"))
+    @UseGuards(RetrieveProjectGuard("id", new ParseIntPipe()))
     @Get("projects/:id/resources")
     async getAll(
         @Param("id") id: number,
@@ -45,19 +42,17 @@ export class ResourcesController {
     @ApiNotFoundResponse({
         description: "Ресурс не найден",
     })
-    async get(@Param("id") id: number): Promise<Resource> {
+    async get(@Param("id", ParseIntPipe) id: number): Promise<Resource> {
         return this.resourcesService.get(id);
     }
 
     /**
      * Создать ресурс
      */
-    @UseGuards(RetrieveProjectGuard("id"))
+    @UseGuards(RetrieveProjectGuard("id", new ParseIntPipe()))
     @Post("projects/:id/resources")
-    @ApiBadRequestResponse({
-        description: "Имя процесса должно быть уникальным",
-    })
     create(
+        @Param("id") id: number,
         @Body() resource: CreateResourceDto,
         @RetrievedProject() project: Project
     ): Promise<Resource> {
@@ -73,5 +68,13 @@ export class ResourcesController {
     })
     remove(@Body() { id }: RemoveResourceDto): Promise<void> {
         return this.resourcesService.remove(id);
+    }
+
+    /**
+     * Проверка ресурса
+     */
+    @Post("resources/check")
+    check(@Body() { type, connection }: CheckResourceDto): Promise<void> {
+        return this.resourcesService.check(type, connection);
     }
 }
