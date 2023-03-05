@@ -1,17 +1,17 @@
 import { Form, Input } from "antd";
 import React from "react";
 
-export const SageConnectionForm: React.FC = () => {
+export const CassandraConnectionForm: React.FC = () => {
     return (
         <>
             <Form.Item
-                label="Bearer токен"
+                label="Строка подключения"
                 labelAlign="left"
-                name={["credentials", "bearer"]}
+                name={["credentials", "url"]}
                 rules={[
                     {
                         required: true,
-                        message: "Введите Bearer токен",
+                        message: "Введите строку подключения",
                     },
                 ]}
             >

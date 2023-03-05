@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import {
+    BadRequestException,
+    Injectable,
+    Logger,
+    NotFoundException,
+} from "@nestjs/common";
 import { Project, Resource, ResourceType } from "@prisma/client";
 import { ResourceInterface } from "../../common/classes/resources/types/ResourceInterface";
 import {
@@ -20,6 +25,8 @@ export class ResourcesService {
         resource: CreateResourceDto
     ): Promise<Resource> {
         const credentials = encrypt(resource.credentials);
+
+        console.log(credentials);
 
         const createdResource = await this.db.resource.create({
             data: {
@@ -53,11 +60,19 @@ export class ResourcesService {
         await this.db.resource.delete({ where: { id } });
     }
 
-    async check(type: ResourceType, data: ConnectionData): Promise<void> {
+    async check(
+        type: ResourceType,
+        credentials: ConnectionData
+    ): Promise<void> {
         const resource: ResourceInterface = new ResourceTypeClassMapper[type](
-            data
+            credentials
         );
 
-        resource.checkConnection();
+        try {
+            await resource.checkConnection();
+        } catch (e: any) {
+            console.log(e);
+            throw new BadRequestException(e.message);
+        }
     }
 }

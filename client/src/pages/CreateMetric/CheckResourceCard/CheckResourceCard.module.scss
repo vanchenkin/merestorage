@@ -1,0 +1,26 @@
+.checkCard {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    border-radius: 8px;
+    border: 1px solid rgba(5, 5, 5, 0.06);
+    padding: 15px;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 3%), 0 1px 6px -1px rgb(0 0 0 / 2%),
+        0 2px 4px 0 rgb(0 0 0 / 2%);
+}
+
+.icon {
+    font-size: 64px !important;
+    display: flex;
+}
+
+.title {
+    font-size: 16px;
+}
+
+.error {
+    font-size: 16px;
+}

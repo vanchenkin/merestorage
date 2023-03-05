@@ -1,5 +1,7 @@
 import { ResourceType } from "@prisma/client";
+import { CassandraResource } from "../CassandraResource";
 import { PostgresResource } from "../PostgresResource";
+import { SageResource } from "../SageResource";
 import { CassandraConnection } from "./connections/cassandraConnection";
 import { PostgresConnection } from "./connections/postgresConnection";
 import { SageConnection } from "./connections/sageConnection";
@@ -12,8 +14,8 @@ export const ResourceTypeConnectionMapper = {
 
 export const ResourceTypeClassMapper: Record<ResourceType, any> = {
     [ResourceType.Postgres]: PostgresResource,
-    [ResourceType.Cassandra]: PostgresResource,
-    [ResourceType.Sage]: PostgresResource,
+    [ResourceType.Cassandra]: CassandraResource,
+    [ResourceType.Sage]: SageResource,
 };
 
 export type ConnectionData =

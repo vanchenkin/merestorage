@@ -8,6 +8,7 @@ import { notification } from "antd";
 import { TypedUseSelectorHook } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
 import { contextReducer } from "./context/contextSlice";
+import { metricsApi } from "./metrics/metricsApi";
 import { projectsApi } from "./projects/projectsApi";
 import { resourcesApi } from "./resources/resourcesApi";
 
@@ -25,12 +26,17 @@ export const store = configureStore({
     reducer: {
         [projectsApi.reducerPath]: projectsApi.reducer,
         [resourcesApi.reducerPath]: resourcesApi.reducer,
+        [metricsApi.reducerPath]: metricsApi.reducer,
         context: contextReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
             .concat(notificator)
-            .concat([projectsApi.middleware, resourcesApi.middleware]),
+            .concat([
+                projectsApi.middleware,
+                resourcesApi.middleware,
+                metricsApi.middleware,
+            ]),
 });
 
 export type RootStateType = ReturnType<typeof store.getState>;

@@ -7,6 +7,9 @@ const ResourcesPage = lazy(() => import("../../pages/Resources/ResourcesPage"));
 const CreateResourcePage = lazy(
     () => import("../../pages/CreateResource/CreateResourcePage")
 );
+const CreateMetricPage = lazy(
+    () => import("../../pages/CreateMetric/CreateMetricPage")
+);
 const MetricsPage = lazy(() => import("../../pages/Metrics/MetricsPage"));
 const ReportsPage = lazy(() => import("../../pages/Reports/ReportsPage"));
 
@@ -20,7 +23,10 @@ export const Router: React.FC = () => {
                     <Route path="create" element={<CreateResourcePage />} />
                 </Route>
                 <Route path="reports" element={<ReportsPage />} />
-                <Route path="metrics" element={<MetricsPage />} />
+                <Route path="metrics">
+                    <Route path="" element={<MetricsPage />} />
+                    <Route path="create" element={<CreateMetricPage />} />
+                </Route>
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Suspense>

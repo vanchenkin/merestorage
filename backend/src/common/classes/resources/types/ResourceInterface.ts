@@ -1,3 +1,3 @@
 export interface ResourceInterface {
-    checkConnection: () => void | string;
+    checkConnection: () => Promise<void | string>;
 }

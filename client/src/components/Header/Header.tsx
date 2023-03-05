@@ -55,8 +55,7 @@ export const Header: React.FC<HeaderProps> = ({ hideMenu }) => {
                             mode="horizontal"
                             items={items}
                             selectedKeys={currentKey}
-                            onSelect={handleSelect}
-                            // disabledOverflow={true}
+                            onClick={handleSelect}
                         />
                     </div>
                 )}

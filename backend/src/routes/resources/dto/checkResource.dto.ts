@@ -19,5 +19,5 @@ export class CheckResourceDto {
     @Type((type) => {
         return ResourceTypeConnectionMapper[type?.object.type as ResourceType];
     })
-    readonly connection: ConnectionData;
+    readonly credentials: ConnectionData;
 }

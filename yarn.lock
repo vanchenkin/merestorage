@@ -2098,6 +2098,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/long@npm:^4.0.0":
+  version: 4.0.2
+  resolution: "@types/long@npm:4.0.2"
+  checksum: d16cde7240d834cf44ba1eaec49e78ae3180e724cd667052b194a372f350d024cba8dd3f37b0864931683dab09ca935d52f0c4c1687178af5ada9fc85b0635f4
+  languageName: node
+  linkType: hard
+
 "@types/luxon@npm:*":
   version: 3.2.0
   resolution: "@types/luxon@npm:3.2.0"
@@ -2126,7 +2133,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.14.6":
+"@types/node@npm:18.14.6, @types/node@npm:>=8":
   version: 18.14.6
   resolution: "@types/node@npm:18.14.6"
   checksum: 2f88f482cabadc6dbddd627a1674239e68c3c9beab56eb4ae2309fb96fd17fc3a509d99b0309bafe13b58529574f49ecf3a583f2ebe2896dd32fe4be436dc96e
@@ -2151,6 +2158,17 @@ __metadata:
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: fd6bce2b674b6efc3db4c7c3d336bd70c90838e8439de639b909ce22f3720d21344f52427f1d9e57b265fcb7f6c018699b99e5e0c208a1a4823014269a6bf35b
+  languageName: node
+  linkType: hard
+
+"@types/pg@npm:8.6.6":
+  version: 8.6.6
+  resolution: "@types/pg@npm:8.6.6"
+  dependencies:
+    "@types/node": "*"
+    pg-protocol: "*"
+    pg-types: ^2.2.0
+  checksum: ac145553a8ad2f357feacad1bceaf5d6ce904eb9d66233b84c469a2b4fa3738d4ebdf29b7ea45387be2d07f915fd873a229f90a2f766d7c377afa7c41fbcf8d1
   languageName: node
   linkType: hard
 
@@ -2841,6 +2859,13 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: f790b99a1bf63ef160c967e23c46feea7787e531292bb827126334612c234ed489a0dc2c7ba33156416f0ffa8d25bf2b0fdb7f35c2ba60eb3e960572bece4001
+  languageName: node
+  linkType: hard
+
+"adm-zip@npm:^0.5.3":
+  version: 0.5.10
+  resolution: "adm-zip@npm:0.5.10"
+  checksum: 07ed91cf6423bf5dca4ee63977bc7635e91b8d21829c00829d48dce4c6932e1b19e6cfcbe44f1931c956e68795ae97183fc775913883fa48ce88a1ac11fb2034
   languageName: node
   linkType: hard
 
@@ -3668,6 +3693,18 @@ __metadata:
   version: 1.0.30001451
   resolution: "caniuse-lite@npm:1.0.30001451"
   checksum: 48a06a7881093bb4d8a08ed5428f24a1cbdaa544b0a6f0c3614287d4f34b6c853e79a0f608a5bd901c27995f5e951825606fba11e7930251cc422bd61de9d849
+  languageName: node
+  linkType: hard
+
+"cassandra-driver@npm:4.6.4":
+  version: 4.6.4
+  resolution: "cassandra-driver@npm:4.6.4"
+  dependencies:
+    "@types/long": ^4.0.0
+    "@types/node": ">=8"
+    adm-zip: ^0.5.3
+    long: ^2.2.0
+  checksum: 44e889496472e0cca5bbf70b0cb4b945db164dd3ac6193c62a7157033b987828cd6df14e06248221414ef2b4856e1cdebb3b6f131f3929dacbf02e2e69c8dec3
   languageName: node
   linkType: hard
 
@@ -7535,6 +7572,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"long@npm:^2.2.0":
+  version: 2.4.0
+  resolution: "long@npm:2.4.0"
+  checksum: e24fd5e14be90ba6ec3faa43b3b0f1c4ac88bfdc52471d90f63e173572f6db27c45873e847f8af58283ca3140eb42d7ba11708102f3cc0956793b03305c737e0
+  languageName: node
+  linkType: hard
+
 "loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
@@ -7781,6 +7825,7 @@ __metadata:
     "@types/express": 4.17.17
     "@types/jest": 29.4.0
     "@types/node": 18.14.6
+    "@types/pg": 8.6.6
     "@types/react": 18.0.28
     "@types/react-dom": 18.0.11
     "@types/react-redux": 7.1.25
@@ -7791,6 +7836,7 @@ __metadata:
     "@yarnpkg/pnpify": 4.0.0-rc.39
     antd: 5.2.3
     axios: 1.3.4
+    cassandra-driver: 4.6.4
     class-transformer: 0.5.1
     class-validator: 0.14.0
     cron: 2.2.0
@@ -8902,14 +8948,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-protocol@npm:^1.6.0":
+"pg-protocol@npm:*, pg-protocol@npm:^1.6.0":
   version: 1.6.0
   resolution: "pg-protocol@npm:1.6.0"
   checksum: e12662d2de2011e0c3a03f6a09f435beb1025acdc860f181f18a600a5495dc38a69d753bbde1ace279c8c442536af9c1a7c11e1d0fe3fad3aa1348b28d9d2683
   languageName: node
   linkType: hard
 
-"pg-types@npm:^2.1.0":
+"pg-types@npm:^2.1.0, pg-types@npm:^2.2.0":
   version: 2.2.0
   resolution: "pg-types@npm:2.2.0"
   dependencies:

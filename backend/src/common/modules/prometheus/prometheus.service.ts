@@ -8,7 +8,7 @@ type Metric = {
 };
 
 @Injectable()
-export class MetricsService {
+export class PrometheusService {
     async createMetric({ name, description, getData }: Metric): Promise<void> {
         new Gauge({
             name,

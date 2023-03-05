@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    HttpCode,
     Param,
     ParseIntPipe,
     Post,
@@ -14,7 +15,7 @@ import { RetrievedProject } from "../projects/decorators/project.decorator";
 import { RetrieveProjectGuard } from "../projects/guards/project.guard";
 import { CheckResourceDto } from "./dto/checkResource.dto";
 import { CreateResourceDto } from "./dto/createResource.dto";
-import { RemoveResourceDto } from "./dto/removeProject.dto";
+import { RemoveResourceDto } from "./dto/removeResource.dto";
 
 import { ResourcesService } from "./resources.service";
 
@@ -73,8 +74,9 @@ export class ResourcesController {
     /**
      * Проверка ресурса
      */
-    @Post("resources/check")
-    check(@Body() { type, connection }: CheckResourceDto): Promise<void> {
-        return this.resourcesService.check(type, connection);
+    @Post("resource/check")
+    @HttpCode(200)
+    check(@Body() { type, credentials }: CheckResourceDto): Promise<void> {
+        return this.resourcesService.check(type, credentials);
     }
 }

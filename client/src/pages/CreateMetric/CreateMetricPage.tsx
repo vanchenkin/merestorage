@@ -5,16 +5,16 @@ import { Wrapper } from "../../components/Wrapper/Wrapper";
 import { CheckResourceCard } from "./CheckResourceCard/CheckResourceCard";
 import { CreateResourceForm } from "./CreateResourceForm/CreateResourceForm";
 
-import styles from "./CreateResourcePage.module.scss";
+import styles from "./CreateMetricPage.module.scss";
 
-const CreateResourcePage: React.FC = () => {
+const CreateMetricPage: React.FC = () => {
     const [form] = Form.useForm();
     const credentials = Form.useWatch("credentials", form);
     const type = Form.useWatch("type", form);
 
     return (
         <Wrapper>
-            <PageHeader navigateTo="/resources">Создание ресурса</PageHeader>
+            <PageHeader navigateTo="/metrics">Создание метрики</PageHeader>
             <div className={styles.wrapper}>
                 <div className={styles.form}>
                     <CreateResourceForm form={form} />
@@ -27,4 +27,4 @@ const CreateResourcePage: React.FC = () => {
     );
 };
 
-export default CreateResourcePage;
+export default CreateMetricPage;
