@@ -1,9 +1,13 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { Project, Resource, ResourceType } from "@prisma/client";
+import { ResourceInterface } from "../../common/classes/resources/types/ResourceInterface";
+import {
+    ConnectionData,
+    ResourceTypeClassMapper,
+} from "../../common/classes/resources/types/resourceMapper";
 import { PrismaService } from "../../common/modules/database/prisma.service";
 import { encrypt } from "../../common/utils/encrypt";
 import { CreateResourceDto } from "./dto/createResource.dto";
-import { ConnectionData } from "./types/resourceTypeConnectionMapper";
 
 @Injectable()
 export class ResourcesService {
@@ -50,6 +54,10 @@ export class ResourcesService {
     }
 
     async check(type: ResourceType, data: ConnectionData): Promise<void> {
-        return;
+        const resource: ResourceInterface = new ResourceTypeClassMapper[type](
+            data
+        );
+
+        resource.checkConnection();
     }
 }

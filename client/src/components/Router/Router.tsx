@@ -7,8 +7,8 @@ const ResourcesPage = lazy(() => import("../../pages/Resources/ResourcesPage"));
 const CreateResourcePage = lazy(
     () => import("../../pages/CreateResource/CreateResourcePage")
 );
-const MetricsPage = lazy(() => import("../../pages/MetricsPage"));
-const ReportsPage = lazy(() => import("../../pages/ReportsPage"));
+const MetricsPage = lazy(() => import("../../pages/Metrics/MetricsPage"));
+const ReportsPage = lazy(() => import("../../pages/Reports/ReportsPage"));
 
 export const Router: React.FC = () => {
     return (

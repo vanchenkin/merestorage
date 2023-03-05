@@ -5,7 +5,7 @@ import { Type } from "class-transformer";
 import {
     ConnectionData,
     ResourceTypeConnectionMapper,
-} from "../types/resourceTypeConnectionMapper";
+} from "../../../common/classes/resources/types/resourceMapper";
 
 export class CheckResourceDto {
     @IsEnum(ResourceType)

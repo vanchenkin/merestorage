@@ -1,4 +1,10 @@
-import { IsEnum, IsObject, IsString, ValidateNested } from "class-validator";
+import {
+    IsEnum,
+    IsNotEmpty,
+    IsObject,
+    IsString,
+    ValidateNested,
+} from "class-validator";
 import { ResourceType } from "@prisma/client";
 import { Trim } from "../../../common/decorators/trim.decorator";
 import { ApiProperty } from "@nestjs/swagger";
@@ -6,15 +12,16 @@ import { Type } from "class-transformer";
 import {
     ConnectionData,
     ResourceTypeConnectionMapper,
-} from "../types/resourceTypeConnectionMapper";
+} from "../../../common/classes/resources/types/resourceMapper";
 
 export class CreateResourceDto {
     @IsString()
-    @Trim()
+    @IsNotEmpty()
     readonly name: string;
 
     @IsString()
     @Trim()
+    @IsNotEmpty()
     readonly description: string;
 
     @IsEnum(ResourceType)

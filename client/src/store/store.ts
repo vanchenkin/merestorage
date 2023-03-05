@@ -33,9 +33,7 @@ export const store = configureStore({
             .concat([projectsApi.middleware, resourcesApi.middleware]),
 });
 
-// Определяем тип, возвращаемый стором
 export type RootStateType = ReturnType<typeof store.getState>;
-// Определяем тип dispatch, зависимый от стора. С any хак чтобы асинхронные экшены работали из коробки
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AppDispatchType = typeof store.dispatch & Dispatch<any>;
 export type GetStateFuncType = () => RootStateType;

@@ -58,7 +58,7 @@ export const ProjectSelect: React.FC<ProjectSelectProps> = ({
     return (
         <>
             <Select
-                style={{ minWidth: 200, ...style }}
+                style={{ minWidth: 220, ...style }}
                 size={size || "middle"}
                 onChange={handleSelect}
                 placeholder="Выберите проект..."
