@@ -5,7 +5,6 @@ import {
     IsString,
     ValidateNested,
 } from "class-validator";
-import { ResourceType } from "@prisma/client";
 import { Trim } from "../../../common/decorators/trim.decorator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
@@ -13,6 +12,7 @@ import {
     ConnectionData,
     ResourceTypeConnectionMapper,
 } from "../../../common/classes/resources/types/resourceMapper";
+import { ResourceType } from "../../../../../common/types/ResourceType";
 
 export class CreateResourceDto {
     @IsString()

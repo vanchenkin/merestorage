@@ -10,6 +10,9 @@ const CreateResourcePage = lazy(
 const CreateMetricPage = lazy(
     () => import("../../pages/CreateMetric/CreateMetricPage")
 );
+const UpdateMetricPage = lazy(
+    () => import("../../pages/CreateMetric/UpdateMetricPage")
+);
 const MetricsPage = lazy(() => import("../../pages/Metrics/MetricsPage"));
 const ReportsPage = lazy(() => import("../../pages/Reports/ReportsPage"));
 
@@ -25,6 +28,7 @@ export const Router: React.FC = () => {
                 <Route path="reports" element={<ReportsPage />} />
                 <Route path="metrics">
                     <Route path="" element={<MetricsPage />} />
+                    <Route path=":metricId" element={<UpdateMetricPage />} />
                     <Route path="create" element={<CreateMetricPage />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" />} />

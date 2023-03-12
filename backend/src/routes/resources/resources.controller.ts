@@ -74,9 +74,9 @@ export class ResourcesController {
     /**
      * Проверка ресурса
      */
-    @Post("resource/check")
+    @Post("resource/check_credentials")
     @HttpCode(200)
-    check(@Body() { type, credentials }: CheckResourceDto): Promise<void> {
-        return this.resourcesService.check(type, credentials);
+    check(@Body() { type, credentials }: CheckResourceDto): Promise<string> {
+        return this.resourcesService.checkByCredentials(type, credentials);
     }
 }

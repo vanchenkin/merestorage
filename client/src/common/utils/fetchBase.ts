@@ -10,8 +10,7 @@ export const fetchBase = (url: string, options?: RequestInit) => {
     })
         .then((res) => res.text())
         .then((res) => (res ? JSON.parse(res) : res))
-        .catch((e) => {
-            console.log(e);
+        .catch(() => {
             notification.error({
                 message: "Что-то пошло не так",
             });

@@ -35,8 +35,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
             if (typeof exceptionResponse === "string") {
                 message = exceptionResponse;
-            } else {
+            } else if (typeof exceptionResponse.message === "string") {
                 message = exceptionResponse.message;
+            } else {
+                message = Array(exceptionResponse.message).join("\n");
             }
         } else if (exception instanceof HttpException) {
             message = exception.message;

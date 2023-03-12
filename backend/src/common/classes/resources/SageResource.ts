@@ -1,6 +1,8 @@
 import { ResourceInterface } from "./types/ResourceInterface";
 import { SageConnection } from "./types/connections/sageConnection";
 import { BadRequestException } from "@nestjs/common";
+import { DataType } from "./types/resourceMapper";
+import { MetricType } from "../../../../../common/types/MetricType";
 
 export class SageResource implements ResourceInterface {
     readonly bearer: string;
@@ -9,7 +11,7 @@ export class SageResource implements ResourceInterface {
         this.bearer = bearer;
     }
 
-    async checkConnection() {
+    async checkConnection(): Promise<void> {
         const res = await fetch(
             "https://ds-ui.sage.tcsbank.ru/mage/api/search",
             {
@@ -33,7 +35,12 @@ export class SageResource implements ResourceInterface {
         if (json.error) {
             throw new BadRequestException(json.error);
         }
+    }
 
-        console.log(json);
+    async getData(
+        query: Record<string, any>,
+        type: MetricType
+    ): Promise<DataType> {
+        throw new Error("Type not implemented");
     }
 }

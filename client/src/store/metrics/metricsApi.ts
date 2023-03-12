@@ -4,7 +4,7 @@ import { notification } from "antd";
 import { Config } from "../../config";
 
 export type CreateMetricProps = {
-    projectId: Project["id"];
+    projectId: Project["id"] | null;
     metric: Partial<Metric>;
 };
 
@@ -13,7 +13,7 @@ export const metricsApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `${Config.ApiUrl}/` }),
     tagTypes: ["Metrics"],
     endpoints: (builder) => ({
-        getAllMetrics: builder.query<Metric[], Project["id"]>({
+        getAllMetrics: builder.query<Metric[], Project["id"] | null>({
             query: (projectId) => `/projects/${projectId}/metrics`,
             providesTags: ["Metrics"],
         }),
@@ -22,6 +22,23 @@ export const metricsApi = createApi({
                 return {
                     url: `/projects/${props.projectId}/metrics`,
                     method: "POST",
+                    body: props.metric,
+                };
+            },
+            invalidatesTags: ["Metrics"],
+            async onQueryStarted(_, { queryFulfilled }) {
+                queryFulfilled.then(() => {
+                    notification.success({
+                        message: "Успешно",
+                    });
+                });
+            },
+        }),
+        upsertMetric: builder.mutation<Metric, CreateMetricProps>({
+            query(props) {
+                return {
+                    url: `/projects/${props.projectId}/metrics`,
+                    method: "PUT",
                     body: props.metric,
                 };
             },
@@ -60,4 +77,5 @@ export const {
     useGetAllMetricsQuery,
     useCreateMetricMutation,
     useRemoveMetricMutation,
+    useUpsertMetricMutation,
 } = metricsApi;

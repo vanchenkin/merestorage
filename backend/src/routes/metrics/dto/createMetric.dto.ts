@@ -2,15 +2,19 @@ import {
     IsEnum,
     IsNotEmpty,
     IsNumber,
+    IsObject,
     IsOptional,
     IsString,
+    Validate,
 } from "class-validator";
-import { MetricType } from "@prisma/client";
 import { Trim } from "../../../common/decorators/trim.decorator";
 import { ApiProperty } from "@nestjs/swagger";
+import { CronValidator } from "../../../common/validators/CronValidator";
+import { MetricType } from "../../../../../common/types/MetricType";
 
 export class CreateMetricDto {
     @IsString()
+    @Trim()
     @IsNotEmpty()
     readonly name: string;
 
@@ -22,6 +26,7 @@ export class CreateMetricDto {
     @IsString()
     @Trim()
     @IsOptional()
+    @Validate(CronValidator)
     readonly cron: string;
 
     @IsNumber()
@@ -33,8 +38,6 @@ export class CreateMetricDto {
     })
     readonly type: MetricType;
 
-    @IsString()
-    @Trim()
-    @IsNotEmpty()
-    readonly query: string;
+    @IsObject()
+    readonly query: Record<string, any>;
 }

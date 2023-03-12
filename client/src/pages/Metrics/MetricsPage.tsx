@@ -1,6 +1,6 @@
 import { Badge, Button, Table } from "antd";
 import React from "react";
-import { Resource } from "@prisma/client";
+import { Metric } from "@prisma/client";
 import { Wrapper } from "../../components/Wrapper/Wrapper";
 import { Link } from "react-router-dom";
 import { ConfirmModal } from "../../components/ConfirmModal/ConfirmModal";
@@ -15,11 +15,9 @@ const { Column } = Table;
 export const MetricsPage: React.FC = () => {
     const project = useAppSelector((state) => state.context.project);
 
-    const { data: metrics, isLoading: isLoadingData } = useGetAllMetricsQuery(
-        project!
-    );
+    const { data: metrics, isLoading: isLoadingData } =
+        useGetAllMetricsQuery(project);
     const [removeMetric] = useRemoveMetricMutation();
-    console.log(metrics);
 
     return (
         <Wrapper>
@@ -61,18 +59,18 @@ export const MetricsPage: React.FC = () => {
                     align="right"
                     width={150}
                     key="action"
-                    render={(_: unknown, resource: Resource) => (
+                    render={(_: unknown, metric: Metric) => (
                         <>
                             <Link to="/metrics/create">
                                 <Button type="link">Посмотреть данные</Button>
                             </Link>
-                            <Link to="/metrics/create">
+                            <Link to={`/metrics/${metric.id}`}>
                                 <Button type="link">Изменить</Button>
                             </Link>
                             <ConfirmModal
-                                message={`Вы уверены что хотите удалить метрику ${resource.name}?`}
-                                description="Восстановить его не получится"
-                                onConfirm={() => removeMetric(resource.id)}
+                                message={`Вы уверены что хотите удалить метрику ${metric.name}?`}
+                                description="Восстановить её не получится"
+                                onConfirm={() => removeMetric(metric.id)}
                             >
                                 <Button type="link">Удалить</Button>
                             </ConfirmModal>

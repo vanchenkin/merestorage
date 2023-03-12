@@ -4,7 +4,7 @@ import { notification } from "antd";
 import { Config } from "../../config";
 
 export type CreateResourceProps = {
-    projectId: Project["id"];
+    projectId: Project["id"] | null;
     resource: Partial<Resource>;
 };
 
@@ -13,7 +13,7 @@ export const resourcesApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `${Config.ApiUrl}/` }),
     tagTypes: ["Resources"],
     endpoints: (builder) => ({
-        getAllResources: builder.query<Resource[], Project["id"]>({
+        getAllResources: builder.query<Resource[], Project["id"] | null>({
             query: (projectId) => `/projects/${projectId}/resources`,
             providesTags: ["Resources"],
         }),

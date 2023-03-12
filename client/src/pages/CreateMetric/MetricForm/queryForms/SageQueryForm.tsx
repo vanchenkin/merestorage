@@ -1,21 +1,22 @@
-import { Form, Input } from "antd";
+import { Form } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import React from "react";
 
-export const SageConnectionForm: React.FC = () => {
+export const SageQueryForm: React.FC = () => {
     return (
         <>
             <Form.Item
-                label="Bearer токен"
+                label="Запрос"
                 labelAlign="left"
-                name={["credentials", "bearer"]}
+                name={["query", "string"]}
                 rules={[
                     {
                         required: true,
-                        message: "Введите Bearer токен",
+                        message: "Введите запрос",
                     },
                 ]}
             >
-                <Input />
+                <TextArea />
             </Form.Item>
         </>
     );

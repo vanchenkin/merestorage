@@ -16,7 +16,7 @@ export const ResourcesPage: React.FC = () => {
     const project = useAppSelector((state) => state.context.project);
 
     const { data: resources, isLoading: isLoadingData } =
-        useGetAllResourcesQuery(project!);
+        useGetAllResourcesQuery(project);
     const [removeResource] = useRemoveResourceMutation();
 
     return (

@@ -6,14 +6,21 @@ services:
       context: .
     ports:
       - 3000:3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - POSTGRES_URL=postgresql://root:root@host.docker.internal:5432/merestorage
+      - NODE_ENV=prod
+      - PORT=3000
+      - SECRET_KEY=
+      - INIT_VECTOR=
   front:
     image: vanchenkin/merestorage:front-latest
     build:
       context: .
       dockerfile: ./docker/front.Dockerfile
+      args:
+        VITE_API_URL: http://merestorage.ru/api
     restart: always
     ports:
-      - 8080:8080
-
-volumes:
-  docker-nest-postgres:
+      - 80:8080

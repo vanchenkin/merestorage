@@ -7,16 +7,17 @@ import {
     Delete,
     ParseIntPipe,
     UseGuards,
-    Patch,
+    HttpCode,
+    Put,
 } from "@nestjs/common";
 import { MetricsService } from "./metrics.service";
-import { CreateMetricDto } from "./dto/createMetric.dto";
-import { UpdateMetricDto } from "./dto/updateMetric.dto";
 import { ApiNotFoundResponse, ApiTags } from "@nestjs/swagger";
 import { Metric, Project } from "@prisma/client";
 import { RetrievedProject } from "../projects/decorators/project.decorator";
 import { RetrieveProjectGuard } from "../projects/guards/project.guard";
 import { RemoveMetricDto } from "./dto/removeMetric.dto";
+import { CheckQueryDto } from "./dto/checkQuery.dto";
+import { UpsertMetricDto } from "./dto/upsertMetric.dto";
 
 @ApiTags("metrics")
 @Controller()
@@ -47,30 +48,16 @@ export class MetricsController {
     }
 
     /**
-     * Изменить метрику по id
-     */
-    @Patch("metrics/:id")
-    @ApiNotFoundResponse({
-        description: "Метрика не найдена",
-    })
-    async update(
-        @Param("id", ParseIntPipe) id: number,
-        @Body() metric: UpdateMetricDto
-    ): Promise<Metric> {
-        return this.metricsService.patch(id, metric);
-    }
-
-    /**
-     * Создать метрику
+     * Изменить или создать метрику
      */
     @UseGuards(RetrieveProjectGuard("id", new ParseIntPipe()))
-    @Post("projects/:id/metrics")
-    create(
+    @Put("projects/:id/metrics")
+    async upsert(
         @Param("id") id: number,
-        @Body() metric: CreateMetricDto,
+        @Body() metric: UpsertMetricDto,
         @RetrievedProject() project: Project
     ): Promise<Metric> {
-        return this.metricsService.create(project, metric);
+        return this.metricsService.upsert(project, metric);
     }
 
     /**
@@ -82,5 +69,14 @@ export class MetricsController {
     })
     remove(@Body() { id }: RemoveMetricDto): Promise<void> {
         return this.metricsService.remove(id);
+    }
+
+    /**
+     * Проверка запроса
+     */
+    @Post("metric/check_query")
+    @HttpCode(200)
+    check(@Body() { type, query, resourceId }: CheckQueryDto): Promise<string> {
+        return this.metricsService.checkQuery(resourceId, type, query);
     }
 }

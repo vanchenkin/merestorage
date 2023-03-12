@@ -1,26 +1,45 @@
 import { Form } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
+import { CheckCard } from "../../components/CheckCard/CheckCard";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
 import { Wrapper } from "../../components/Wrapper/Wrapper";
-import { CheckResourceCard } from "./CheckResourceCard/CheckResourceCard";
-import { CreateResourceForm } from "./CreateResourceForm/CreateResourceForm";
+import { MetricForm } from "./MetricForm/MetricForm";
 
 import styles from "./CreateMetricPage.module.scss";
 
-const CreateMetricPage: React.FC = () => {
+type Props = {
+    initialValues?: Record<string, any>;
+};
+
+export const CreateMetricPage: React.FC<Props> = ({ initialValues }) => {
     const [form] = Form.useForm();
-    const credentials = Form.useWatch("credentials", form);
+    const query = Form.useWatch("query", form);
+    const resourceId = Form.useWatch("resourceId", form);
     const type = Form.useWatch("type", form);
+
+    useEffect(() => {
+        Object.entries(initialValues || {}).forEach((entry) =>
+            form.setFieldValue(entry[0], entry[1])
+        );
+    }, [initialValues]);
 
     return (
         <Wrapper>
-            <PageHeader navigateTo="/metrics">Создание метрики</PageHeader>
+            <PageHeader navigateTo="/metrics">
+                {Object.keys(initialValues || {}).length !== 0
+                    ? "Изменение метрики"
+                    : "Создание метрики"}
+            </PageHeader>
             <div className={styles.wrapper}>
                 <div className={styles.form}>
-                    <CreateResourceForm form={form} />
+                    <MetricForm form={form} />
                 </div>
                 <div className={styles.checkCard}>
-                    <CheckResourceCard data={{ credentials, type }} />
+                    <CheckCard
+                        title="Проверка сбора данных"
+                        body={{ query, type, resourceId }}
+                        apiPath="/metric/check_query"
+                    />
                 </div>
             </div>
         </Wrapper>

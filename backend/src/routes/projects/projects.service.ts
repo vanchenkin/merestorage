@@ -59,5 +59,7 @@ export class ProjectsService {
                 id,
             },
         });
+
+        this.logger.log({ id }, "project removed");
     }
 }

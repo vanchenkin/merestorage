@@ -1,10 +1,14 @@
 FROM node:18-alpine AS alpine
 WORKDIR /app
 
+ARG VITE_API_URL
+
 COPY . .
 
-RUN yarn install --immutable --mode=skip-build && \
-    yarn run build && \
+RUN yarn install --immutable --mode=skip-build
+
+RUN yarn prisma generate && \
+    yarn run build:front && \
     ls -lah
 
 FROM nginx:alpine

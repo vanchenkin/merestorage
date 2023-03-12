@@ -1,16 +1,22 @@
-import { ResourceType } from "@prisma/client";
-import { Button, Form, FormInstance, Input, Select } from "antd";
+import { Button, Form, FormInstance, Input, Select, Tooltip } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ResourceType } from "../../../../../common/types/ResourceType";
 import { useCreateResourceMutation } from "../../../store/resources/resourcesApi";
 import { useAppSelector } from "../../../store/store";
 import { ResourceTypeComponentMapper } from "./types/ResourceTypeComponentMapper";
 
 type Props = {
     form: FormInstance;
+    setSuccessCheck: (value: boolean) => void;
+    successCheck: boolean;
 };
 
-export const CreateResourceForm: React.FC<Props> = ({ form }) => {
+export const CreateResourceForm: React.FC<Props> = ({
+    form,
+    setSuccessCheck,
+    successCheck,
+}) => {
     const [type, setType] = useState<ResourceType>();
 
     const project = useAppSelector((state) => state.context.project);
@@ -20,7 +26,7 @@ export const CreateResourceForm: React.FC<Props> = ({ form }) => {
 
     const onFinish = async (values: any) => {
         const result = await createResource({
-            projectId: project!,
+            projectId: project,
             resource: values,
         });
 
@@ -33,6 +39,10 @@ export const CreateResourceForm: React.FC<Props> = ({ form }) => {
         setType(option);
     };
 
+    const handleFormChange = () => {
+        setSuccessCheck(false);
+    };
+
     return (
         <Form
             name="resource"
@@ -41,6 +51,7 @@ export const CreateResourceForm: React.FC<Props> = ({ form }) => {
             onFinish={onFinish}
             autoComplete="off"
             form={form}
+            onChange={handleFormChange}
         >
             <Form.Item
                 label="Имя"
@@ -88,9 +99,16 @@ export const CreateResourceForm: React.FC<Props> = ({ form }) => {
             {type && ResourceTypeComponentMapper[type]}
 
             <Form.Item>
-                <Button type="primary" htmlType="submit" loading={isLoading}>
-                    Создать
-                </Button>
+                <Tooltip title="Чтобы создать ресурс, проверка должна пройти успешно">
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={isLoading}
+                        disabled={!successCheck}
+                    >
+                        Создать
+                    </Button>
+                </Tooltip>
             </Form.Item>
         </Form>
     );

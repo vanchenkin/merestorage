@@ -10,7 +10,7 @@
 version: "3.9"
 services:
   postgres:
-    image: postgres:13.3
+    image: postgres:14
     environment:
       POSTGRES_DB: merestorage
       POSTGRES_USER: root
