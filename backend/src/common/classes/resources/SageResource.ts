@@ -1,7 +1,7 @@
 import { ResourceInterface } from "./types/ResourceInterface";
 import { SageConnection } from "./types/connections/sageConnection";
 import { BadRequestException } from "@nestjs/common";
-import { DataType } from "./types/resourceMapper";
+import { MetricDataType } from "./types/resourceMapper";
 import { MetricType } from "../../../../../common/types/MetricType";
 
 export class SageResource implements ResourceInterface {
@@ -40,7 +40,12 @@ export class SageResource implements ResourceInterface {
     async getData(
         query: Record<string, any>,
         type: MetricType
-    ): Promise<DataType> {
+    ): Promise<MetricDataType> {
+        // if (type === MetricType.Number) {
+        //     return;
+        // } else if (type === MetricType.Object) {
+        //     return;
+        // }
         throw new Error("Type not implemented");
     }
 }

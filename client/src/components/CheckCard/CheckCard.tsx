@@ -17,12 +17,10 @@ type Props = {
     onResult?: (value: boolean) => void;
 };
 
-type ResponseType =
-    | {
-          statusCode: number;
-          message: string;
-      }
-    | string;
+type ResponseType = {
+    statusCode: number;
+    message: string;
+};
 
 /**
  * Ручка apiPath должна возвращать ошибку в data.message или пустой ответ
@@ -46,11 +44,11 @@ export const CheckCard: React.FC<Props> = ({
             setLoading(false);
             setData(undefined);
             setError(undefined);
-            if (typeof data !== "string") {
+            if (data.statusCode === 200) {
                 setError(data.message);
                 if (onResult) onResult(false);
             } else {
-                setData(data);
+                setData(data.message);
                 if (onResult) onResult(true);
             }
         });

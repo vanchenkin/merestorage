@@ -4,10 +4,14 @@ import {
     Logger,
     NotFoundException,
 } from "@nestjs/common";
-import { Metric, Project } from "@prisma/client";
+import { Metric, MetricData, Project } from "@prisma/client";
 import { MetricType } from "../../../../common/types/MetricType";
-import { QueryType } from "../../common/classes/resources/types/resourceMapper";
+import {
+    MetricDataType,
+    QueryType,
+} from "../../common/classes/resources/types/resourceMapper";
 import { PrismaService } from "../../common/modules/database/prisma.service";
+import { PgBossService } from "../../common/modules/pgboss/pgboss.service";
 import { ResourcesService } from "../resources/resources.service";
 import { UpsertMetricDto } from "./dto/upsertMetric.dto";
 
@@ -17,8 +21,11 @@ export class MetricsService {
 
     constructor(
         private db: PrismaService,
-        private readonly resourcesService: ResourcesService
-    ) {}
+        private readonly resourcesService: ResourcesService,
+        private readonly pgBossService: PgBossService
+    ) {
+        this.consumeSchedules();
+    }
 
     async get(id: number): Promise<Metric> {
         const metric = await this.db.metric.findUnique({ where: { id } });
@@ -42,7 +49,7 @@ export class MetricsService {
     }
 
     async upsert(project: Project, metric: UpsertMetricDto): Promise<Metric> {
-        const upsertedMetric = await this.db.metric.upsert({
+        const upsertedMetric: Metric = await this.db.metric.upsert({
             create: {
                 ...metric,
                 project: {
@@ -62,6 +69,21 @@ export class MetricsService {
             },
         });
 
+        if (upsertedMetric.cron) {
+            await this.pgBossService
+                .getInstance()
+                .schedule(
+                    `metric:${upsertedMetric.id}`,
+                    upsertedMetric.cron,
+                    undefined,
+                    { tz: "Europe/Moscow" }
+                );
+        } else {
+            await this.pgBossService
+                .getInstance()
+                .unschedule(`metric:${upsertedMetric.id}`);
+        }
+
         this.logger.log({ name: upsertedMetric.name }, "metric upserted");
 
         return upsertedMetric;
@@ -70,23 +92,68 @@ export class MetricsService {
     async remove(id: number): Promise<void> {
         await this.get(id);
         await this.db.metric.delete({ where: { id } });
+        await this.pgBossService.getInstance().unschedule(`metric:${id}`);
 
         this.logger.log({ id }, "metric removed");
     }
 
-    async checkQuery(
+    async storeMetricData(metricId: number): Promise<MetricDataType> {
+        const metric = await this.get(metricId);
+
+        const data = await this.executeMetricQuery(
+            metric.resourceId,
+            metric.type,
+            metric.query as QueryType
+        );
+
+        await this.db.metricData.create({
+            data: {
+                data: data,
+                metric: {
+                    connect: { id: metric.id },
+                },
+            },
+        });
+
+        this.logger.log({ metricId, value: data }, "metric");
+        return data;
+    }
+
+    async executeMetricQuery(
         resourceId: number,
         type: MetricType,
         query: QueryType
-    ): Promise<string> {
+    ): Promise<MetricDataType> {
         const resourceEntity = await this.resourcesService.get(resourceId);
         const resource =
             this.resourcesService.createResourceClassFromModel(resourceEntity);
 
         try {
-            return JSON.stringify(await resource.getData(query, type));
+            return await resource.getData(query, type);
         } catch (e: any) {
             throw new BadRequestException(e.message);
         }
+    }
+
+    async consumeSchedules(): Promise<void> {
+        this.pgBossService.getInstance().work("metric:*", {}, async (job) => {
+            try {
+                await this.storeMetricData(
+                    +job.name.substring("metric:".length)
+                );
+            } catch (e) {
+                job.done(e as Error);
+            }
+        });
+    }
+
+    async getMetricData(metricId: number): Promise<MetricData[]> {
+        return this.db.metricData.findMany({
+            where: {
+                metric: {
+                    id: metricId,
+                },
+            },
+        });
     }
 }

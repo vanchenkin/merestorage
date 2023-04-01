@@ -1,7 +1,7 @@
 import { ResourceInterface } from "./types/ResourceInterface";
 import { CassandraConnection } from "./types/connections/cassandraConnection";
 import { CassandraQueryType } from "./types/queries/CassandraQueryType";
-import { DataType } from "./types/resourceMapper";
+import { MetricDataType } from "./types/resourceMapper";
 import { MetricType } from "../../../../../common/types/MetricType";
 
 export class CassandraResource implements ResourceInterface {
@@ -18,7 +18,12 @@ export class CassandraResource implements ResourceInterface {
     async getData<T extends CassandraQueryType>(
         query: Record<string, any>,
         type: MetricType
-    ): Promise<DataType> {
+    ): Promise<MetricDataType> {
+        // if (type === MetricType.Number) {
+        //     return;
+        // } else if (type === MetricType.Object) {
+        //     return;
+        // }
         throw new Error("Type not implemented");
     }
 }

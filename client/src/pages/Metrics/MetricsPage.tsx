@@ -5,6 +5,7 @@ import { Wrapper } from "../../components/Wrapper/Wrapper";
 import { Link } from "react-router-dom";
 import { ConfirmModal } from "../../components/ConfirmModal/ConfirmModal";
 import { useAppSelector } from "../../store/store";
+import cronstrue from "cronstrue/i18n";
 import {
     useGetAllMetricsQuery,
     useRemoveMetricMutation,
@@ -48,6 +49,15 @@ export const MetricsPage: React.FC = () => {
                     dataIndex="type"
                     key="type"
                     width={150}
+                />
+
+                <Column
+                    title="Периодичность сбора"
+                    key="cron"
+                    width={150}
+                    render={(metric) =>
+                        cronstrue.toString(metric.cron, { locale: "ru" })
+                    }
                 />
 
                 <Column

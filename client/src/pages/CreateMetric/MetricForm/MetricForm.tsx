@@ -6,6 +6,7 @@ import { useUpsertMetricMutation } from "../../../store/metrics/metricsApi";
 import { useGetAllResourcesQuery } from "../../../store/resources/resourcesApi";
 import { useAppSelector } from "../../../store/store";
 import { MetricComponentMapper } from "./types/MetricComponentMapper";
+import cronstrue from "cronstrue/i18n";
 
 type Props = {
     form: FormInstance;
@@ -13,6 +14,14 @@ type Props = {
 
 export const MetricForm: React.FC<Props> = ({ form }) => {
     const resourceId = Form.useWatch("resourceId", form);
+    const cron = Form.useWatch("cron", form);
+
+    let cronParsed = "";
+    try {
+        cronParsed = cronstrue.toString(cron, {
+            locale: "ru",
+        });
+    } catch {}
 
     const project = useAppSelector((state) => state.context.project);
     const [upsertMetric, { isLoading }] = useUpsertMetricMutation();
@@ -76,7 +85,7 @@ export const MetricForm: React.FC<Props> = ({ form }) => {
                 <Input />
             </Form.Item>
 
-            <Tooltip title="http://crontab.org/">
+            <Tooltip title={cronParsed || "Не удалось распарсить"}>
                 <Form.Item
                     label="Периодичность сбора"
                     name="cron"

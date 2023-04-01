@@ -12,12 +12,13 @@ import {
 } from "@nestjs/common";
 import { MetricsService } from "./metrics.service";
 import { ApiNotFoundResponse, ApiTags } from "@nestjs/swagger";
-import { Metric, Project } from "@prisma/client";
+import { Metric, MetricData, Project } from "@prisma/client";
 import { RetrievedProject } from "../projects/decorators/project.decorator";
 import { RetrieveProjectGuard } from "../projects/guards/project.guard";
-import { RemoveMetricDto } from "./dto/removeMetric.dto";
+import { MetricIdDto } from "./dto/metricId.dto";
 import { CheckQueryDto } from "./dto/checkQuery.dto";
 import { UpsertMetricDto } from "./dto/upsertMetric.dto";
+import { MetricDataType } from "../../common/classes/resources/types/resourceMapper";
 
 @ApiTags("metrics")
 @Controller()
@@ -67,7 +68,7 @@ export class MetricsController {
     @ApiNotFoundResponse({
         description: "Метрика не найдена",
     })
-    remove(@Body() { id }: RemoveMetricDto): Promise<void> {
+    remove(@Body() { id }: MetricIdDto): Promise<void> {
         return this.metricsService.remove(id);
     }
 
@@ -76,7 +77,36 @@ export class MetricsController {
      */
     @Post("metric/check_query")
     @HttpCode(200)
-    check(@Body() { type, query, resourceId }: CheckQueryDto): Promise<string> {
-        return this.metricsService.checkQuery(resourceId, type, query);
+    async check(
+        @Body() { type, query, resourceId }: CheckQueryDto
+    ): Promise<{ message: string; statusCode: number }> {
+        return {
+            message: JSON.stringify(
+                await this.metricsService.executeMetricQuery(
+                    resourceId,
+                    type,
+                    query
+                )
+            ),
+            statusCode: 200,
+        };
+    }
+
+    /**
+     * Собрать и сохранить метрику
+     */
+    @Post("metric/store")
+    @HttpCode(200)
+    store(@Body() { id }: MetricIdDto): Promise<MetricDataType> {
+        return this.metricsService.storeMetricData(id);
+    }
+
+    /**
+     * Получить все данные по метрике
+     */
+    @Post("metric/:id/data")
+    @HttpCode(200)
+    getMetricData(@Body() { id }: MetricIdDto): Promise<MetricData[]> {
+        return this.metricsService.getMetricData(id);
     }
 }

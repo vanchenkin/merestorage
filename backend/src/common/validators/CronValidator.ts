@@ -2,13 +2,14 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from "class-validator";
-import { CronTime } from "cron";
+
+import { parseExpression } from "cron-parser";
 
 @ValidatorConstraint({ name: "cron", async: false })
 export class CronValidator implements ValidatorConstraintInterface {
     validate(text: string) {
         try {
-            new CronTime(text);
+            parseExpression(text);
 
             return true;
         } catch (e) {

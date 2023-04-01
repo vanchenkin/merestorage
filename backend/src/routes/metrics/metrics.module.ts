@@ -3,9 +3,15 @@ import { MetricsService } from "./metrics.service";
 import { MetricsController } from "./metrics.controller";
 import { ProjectsService } from "../projects/projects.service";
 import { ResourcesService } from "../resources/resources.service";
+import { PgBossService } from "../../common/modules/pgboss/pgboss.service";
 
 @Module({
     controllers: [MetricsController],
-    providers: [MetricsService, ProjectsService, ResourcesService],
+    providers: [
+        MetricsService,
+        ProjectsService,
+        ResourcesService,
+        PgBossService,
+    ],
 })
 export class MetricsModule {}

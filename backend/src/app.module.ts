@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { ScheduleModule } from "@nestjs/schedule";
 import { PrometheusModule } from "@willsoto/nestjs-prometheus";
 import { LoggerModule } from "nestjs-pino";
 import { PrometheusModule as PromModule } from "./common/modules/prometheus/prometheus.module";
@@ -12,6 +11,9 @@ import { HealthModule } from "./routes/health/health.module";
 import { ResourcesModule } from "./routes/resources/resources.module";
 import { PrismaModule } from "./common/modules/database/prisma.module";
 import { MetricsModule } from "./routes/metrics/metrics.module";
+import { PgBossModule } from "./common/modules/pgboss/pgboss.module";
+import { ReportsModule } from "./routes/reports/reports.module";
+import { ReportRowsModule } from "./routes/reportRows/reportRows.module";
 
 @Module({
     imports: [
@@ -23,13 +25,15 @@ import { MetricsModule } from "./routes/metrics/metrics.module";
             load: [configurations],
             envFilePath: ".env",
         }),
-        ScheduleModule.forRoot(),
         HealthModule,
         PrismaModule,
+        PgBossModule,
         // роуты
         ProjectsModule,
         ResourcesModule,
         MetricsModule,
+        ReportsModule,
+        ReportRowsModule,
     ],
     controllers: [],
 })

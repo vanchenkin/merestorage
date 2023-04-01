@@ -37,4 +37,4 @@ export type ResourceQueryTypeMapper = {
 };
 
 export type QueryType = ResourceQueryTypeMapper[ResourceType];
-export type DataType = MetricDataTypeMapper[MetricType];
+export type MetricDataType = MetricDataTypeMapper[MetricType];
