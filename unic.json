@@ -1,0 +1,181 @@
+{
+    "$schema": "https://schema-storage.s3-website.tinkoff.ru/unic/schema-v1.json",
+    "spec": {
+        "jobs": {
+            "dynamic-migration": {
+                "name": "dynamic-migration",
+                "environment": "yandex-dev",
+                "type": "dynamic",
+                "namespace": "workflow-builder",
+                "maxRetries": 1,
+                "resources": {
+                    "preset": "nodejs-ssr-app"
+                },
+                "dockerfile": "./docker/migration.Dockerfile",
+                "envs": {
+                    "POSTGRES_URL": "$[ENV:MERESTORAGE_POSTGRES_URL]"
+                }
+            },
+            "dynamic-migration-revert": {
+                "name": "dynamic-migration-revert",
+                "environment": "yandex-dev",
+                "type": "dynamic",
+                "namespace": "workflow-builder",
+                "maxRetries": 1,
+                "resources": {
+                    "preset": "nodejs-ssr-app"
+                },
+                "dockerfile": "./docker/migrationRevert.Dockerfile",
+                "envs": {
+                    "POSTGRES_URL": "$[ENV:MERESTORAGE_POSTGRES_URL]"
+                }
+            },
+            "prod-migration": {
+                "name": "prod-migration",
+                "environment": "yandex-dev",
+                "type": "prod",
+                "namespace": "workflow-builder",
+                "maxRetries": 1,
+                "resources": {
+                    "preset": "nodejs-ssr-app"
+                },
+                "dockerfile": "./docker/migration.Dockerfile",
+                "envs": {
+                    "POSTGRES_URL": "$[ENV:MERESTORAGE_POSTGRES_URL_PROD]"
+                }
+            },
+            "prod-migration-revert": {
+                "name": "prod-migration-revert",
+                "environment": "yandex-dev",
+                "type": "prod",
+                "namespace": "workflow-builder",
+                "maxRetries": 1,
+                "resources": {
+                    "preset": "nodejs-ssr-app"
+                },
+                "dockerfile": "./docker/migrationRevert.Dockerfile",
+                "envs": {
+                    "POSTGRES_URL": "$[ENV:MERESTORAGE_POSTGRES_URL_PROD]"
+                }
+            }
+        },
+        "apps": {
+            "merestorage-front": {
+                "dynamic": {
+                    "name": "merestorage-front",
+                    "namespace": "cobrowsing",
+                    "type": "dynamic",
+                    "environment": "yandex-dev",
+                    "services": [
+                        {
+                            "name": "app",
+                            "envs": {
+                                "VITE_API_URL": "//merestorage-back-$[ENV:CI_COMMIT_REF_SLUG].cobrowsing.internal.ya-ruc1-dev1.dev.k8s.tcsbank.ru/api",
+                                "NODE_ENV": "production"
+                            },
+                            "dockerFile": "./docker/front.Dockerfile",
+                            "resources": {
+                                "preset": "nodejs-ssr-app"
+                            }
+                        }
+                    ]
+                },
+                "prod": {
+                    "name": "front",
+                    "namespace": "cobrowsing",
+                    "type": "prod",
+                    "environment": "yandex-prod",
+                    "services": [
+                        {
+                            "name": "app",
+                            "envs": {
+                                "VITE_API_URL": "//merestorage-front.cobrowsing.internal.ya-ruc1-dev1.dev.k8s.tcsbank.ru/api",
+                                "NODE_ENV": "production"
+                            },
+                            "dockerFile": "./docker/front.Dockerfile",
+                            "resources": {
+                                "replicas": 2
+                            }
+                        }
+                    ]
+                }
+            },
+            "merestorage-back": {
+                "dynamic": {
+                    "name": "merestorage-back",
+                    "namespace": "cobrowsing",
+                    "type": "dynamic",
+                    "environment": "yandex-dev",
+                    "services": [
+                        {
+                            "name": "app",
+                            "envs": {
+                                "POSTGRES_URL": "$[ENV:MERESTORAGE_POSTGRES_URL]",
+                                "NODE_ENV": "dev",
+                                "PORT": "3000",
+                                "SECRET_KEY": "$[ENV:MERESTORAGE_SECRET_KEY]",
+                                "INIT_VECTOR": "$[ENV:MERESTORAGE_INIT_VECTOR]"
+                            },
+                            "dockerFile": "./docker/back.Dockerfile",
+                            "resources": {
+                                "preset": "nodejs-microservice"
+                            },
+                            "probes": {
+                                "liveness": {
+                                    "path": "/api/healthz",
+                                    "port": 3000
+                                },
+                                "readiness": {
+                                    "path": "/api/readyz",
+                                    "port": 3000
+                                }
+                            },
+                            "annotations": {
+                                "service": {
+                                    "sage/group": "merestorage"
+                                }
+                            }
+                        }
+                    ]
+                },
+                "prod": {
+                    "name": "merestorage-back",
+                    "namespace": "cobrowsing",
+                    "type": "prod",
+                    "environment": "yandex-prod",
+                    "services": [
+                        {
+                            "name": "app",
+                            "envs": {
+                                "POSTGRES_URL": "$[ENV:MERESTORAGE_POSTGRES_URL_PROD]",
+                                "NODE_ENV": "dev",
+                                "PORT": "3000",
+                                "SECRET_KEY": "$[ENV:MERESTORAGE_SECRET_KEY_PROD]",
+                                "INIT_VECTOR": "$[ENV:MERESTORAGE_INIT_VECTOR_PROD]"
+                            },
+                            "dockerFile": "./docker/back.Dockerfile",
+                            "resources": {
+                                "replicas": 2
+                            },
+                            "probes": {
+                                "liveness": {
+                                    "path": "/api/healthz",
+                                    "port": 3000
+                                },
+                                "readiness": {
+                                    "path": "/api/readyz",
+                                    "port": 3000
+                                }
+                            },
+                            "annotations": {
+                                "service": {
+                                    "sage/group": "merestorage"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
