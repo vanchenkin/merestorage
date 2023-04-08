@@ -5,7 +5,7 @@ import { PostgresQueryType } from "./types/queries/PostgresQueryType";
 import { MetricDataType } from "./types/resourceMapper";
 import { MetricType } from "../../../../../common/types/MetricType";
 
-export class PostgresResource implements ResourceInterface {
+export class PostgresResource implements ResourceInterface<PostgresQueryType> {
     readonly url: string;
     readonly connection: Client;
 
@@ -20,8 +20,8 @@ export class PostgresResource implements ResourceInterface {
         await this.connection.query("SELECT 1");
     }
 
-    async getData<T extends PostgresQueryType>(
-        query: T,
+    async getData(
+        query: PostgresQueryType,
         type: MetricType
     ): Promise<MetricDataType> {
         await this.connection.connect();

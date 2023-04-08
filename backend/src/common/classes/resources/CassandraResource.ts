@@ -4,7 +4,9 @@ import { CassandraQueryType } from "./types/queries/CassandraQueryType";
 import { MetricDataType } from "./types/resourceMapper";
 import { MetricType } from "../../../../../common/types/MetricType";
 
-export class CassandraResource implements ResourceInterface {
+export class CassandraResource
+    implements ResourceInterface<CassandraQueryType>
+{
     readonly url: string;
 
     constructor({ url }: CassandraConnection) {
@@ -15,8 +17,8 @@ export class CassandraResource implements ResourceInterface {
         return;
     }
 
-    async getData<T extends CassandraQueryType>(
-        query: Record<string, any>,
+    async getData(
+        query: CassandraQueryType,
         type: MetricType
     ): Promise<MetricDataType> {
         // if (type === MetricType.Number) {

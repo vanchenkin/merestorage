@@ -9,6 +9,7 @@ import { ResourceType } from "../../../../common/types/ResourceType";
 import { ResourceInterface } from "../../common/classes/resources/types/ResourceInterface";
 import {
     ConnectionData,
+    ResourceQueryTypeMapper,
     ResourceTypeClassMapper,
 } from "../../common/classes/resources/types/resourceMapper";
 import { PrismaService } from "../../common/modules/database/prisma.service";
@@ -70,13 +71,15 @@ export class ResourcesService {
 
         try {
             await resource.checkConnection();
-            return JSON.stringify("OK");
+            return "OK";
         } catch (e: any) {
             throw new BadRequestException(e.message);
         }
     }
 
-    createResourceClassFromModel(resource: Resource): ResourceInterface {
+    createResourceClassFromModel(
+        resource: Resource
+    ): ResourceInterface<ResourceQueryTypeMapper[typeof resource.type]> {
         return this.createResourceClass(
             resource.type,
             decrypt(resource.credentials)
@@ -86,7 +89,7 @@ export class ResourcesService {
     createResourceClass(
         type: ResourceType,
         credentials: ConnectionData
-    ): ResourceInterface {
+    ): ResourceInterface<ResourceQueryTypeMapper[typeof type]> {
         return new ResourceTypeClassMapper[type](credentials);
     }
 }

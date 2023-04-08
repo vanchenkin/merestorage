@@ -76,7 +76,17 @@ export class ResourcesController {
      */
     @Post("resource/check_credentials")
     @HttpCode(200)
-    check(@Body() { type, credentials }: CheckResourceDto): Promise<string> {
-        return this.resourcesService.checkByCredentials(type, credentials);
+    async check(
+        @Body() { type, credentials }: CheckResourceDto
+    ): Promise<{ message: string; statusCode: number }> {
+        return {
+            message: JSON.stringify(
+                await this.resourcesService.checkByCredentials(
+                    type,
+                    credentials
+                )
+            ),
+            statusCode: 200,
+        };
     }
 }

@@ -1,7 +1,7 @@
 import { MetricType } from "../../../../../../common/types/MetricType";
-import { MetricDataType, QueryType } from "./resourceMapper";
+import { MetricDataType } from "./resourceMapper";
 
-export interface ResourceInterface {
+export interface ResourceInterface<T> {
     checkConnection: () => Promise<void>;
-    getData: (query: QueryType, type: MetricType) => Promise<MetricDataType>;
+    getData: (query: T, type: MetricType) => Promise<MetricDataType>;
 }

@@ -44,7 +44,7 @@ export const CheckCard: React.FC<Props> = ({
             setLoading(false);
             setData(undefined);
             setError(undefined);
-            if (data.statusCode === 200) {
+            if (data.statusCode !== 200) {
                 setError(data.message);
                 if (onResult) onResult(false);
             } else {

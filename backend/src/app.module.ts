@@ -3,7 +3,6 @@ import { ConfigModule } from "@nestjs/config";
 import { PrometheusModule } from "@willsoto/nestjs-prometheus";
 import { LoggerModule } from "nestjs-pino";
 import { PrometheusModule as PromModule } from "./common/modules/prometheus/prometheus.module";
-import configurations from "./config/configurations";
 import { LoggerConfig } from "./config/logger/logger.config";
 import { MetricsConfig } from "./config/metrics/metrics.config";
 import { ProjectsModule } from "./routes/projects/projects.module";
@@ -22,7 +21,6 @@ import { ReportRowsModule } from "./routes/reportRows/reportRows.module";
         LoggerModule.forRoot(LoggerConfig),
         ConfigModule.forRoot({
             isGlobal: true,
-            load: [configurations],
             envFilePath: ".env",
         }),
         HealthModule,
