@@ -5,7 +5,7 @@ ARG VITE_API_URL
 
 COPY . .
 
-RUN yarn install --immutable --mode=skip-build
+RUN yarn install --immutable
 
 RUN yarn prisma generate && \
     yarn run build:front && \

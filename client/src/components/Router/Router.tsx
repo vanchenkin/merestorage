@@ -15,6 +15,14 @@ const UpdateMetricPage = lazy(
 );
 const MetricsPage = lazy(() => import("../../pages/Metrics/MetricsPage"));
 const ReportsPage = lazy(() => import("../../pages/Reports/ReportsPage"));
+const CreateReportPage = lazy(
+    () => import("../../pages/CreateReport/CreateReportPage")
+);
+const UpdateReportPage = lazy(
+    () => import("../../pages/CreateReport/UpdateReportPage")
+);
+const TestReportPage = lazy(() => import("../../pages/Test/TestReportPage"));
+const ReportPage = lazy(() => import("../../pages/Report/ReportPage"));
 
 export const Router: React.FC = () => {
     return (
@@ -25,12 +33,20 @@ export const Router: React.FC = () => {
                     <Route path="" element={<ResourcesPage />} />
                     <Route path="create" element={<CreateResourcePage />} />
                 </Route>
-                <Route path="reports" element={<ReportsPage />} />
+                <Route path="reports">
+                    <Route path="" element={<ReportsPage />} />
+                    <Route path=":reportId">
+                        <Route path="" element={<UpdateReportPage />} />
+                        <Route path="view" element={<ReportPage />} />
+                    </Route>
+                    <Route path="create" element={<CreateReportPage />} />
+                </Route>
                 <Route path="metrics">
                     <Route path="" element={<MetricsPage />} />
                     <Route path=":metricId" element={<UpdateMetricPage />} />
                     <Route path="create" element={<CreateMetricPage />} />
                 </Route>
+                <Route path="test/report" element={<TestReportPage />} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Suspense>

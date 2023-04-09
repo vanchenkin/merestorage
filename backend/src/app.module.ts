@@ -12,7 +12,6 @@ import { PrismaModule } from "./common/modules/database/prisma.module";
 import { MetricsModule } from "./routes/metrics/metrics.module";
 import { PgBossModule } from "./common/modules/pgboss/pgboss.module";
 import { ReportsModule } from "./routes/reports/reports.module";
-import { ReportRowsModule } from "./routes/reportRows/reportRows.module";
 
 @Module({
     imports: [
@@ -31,7 +30,6 @@ import { ReportRowsModule } from "./routes/reportRows/reportRows.module";
         ResourcesModule,
         MetricsModule,
         ReportsModule,
-        ReportRowsModule,
     ],
     controllers: [],
 })

@@ -40,18 +40,22 @@ export const CheckCard: React.FC<Props> = ({
         fetchBase(apiPath, {
             method: "POST",
             body: JSON.stringify(body),
-        }).then((data: ResponseType) => {
-            setLoading(false);
-            setData(undefined);
-            setError(undefined);
-            if (data.statusCode !== 200) {
-                setError(data.message);
-                if (onResult) onResult(false);
-            } else {
-                setData(data.message);
-                if (onResult) onResult(true);
-            }
-        });
+        })
+            .then((data: ResponseType) => {
+                setLoading(false);
+                setData(undefined);
+                setError(undefined);
+                if (data.statusCode !== 200) {
+                    setError(data.message);
+                    if (onResult) onResult(false);
+                } else {
+                    setData(data.message);
+                    if (onResult) onResult(true);
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     const content = loading ? (

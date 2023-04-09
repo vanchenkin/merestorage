@@ -6,14 +6,16 @@ import {
     Param,
     ParseIntPipe,
     Post,
+    Put,
     UseGuards,
 } from "@nestjs/common";
 import { ApiNotFoundResponse, ApiTags } from "@nestjs/swagger";
 import { Project, Report } from "@prisma/client";
 import { RetrievedProject } from "../projects/decorators/project.decorator";
 import { RetrieveProjectGuard } from "../projects/guards/project.guard";
-import { CreateReportDto } from "./dto/createReport.dto";
+import { QueryDto } from "./dto/query.dto";
 import { ReportIdDto } from "./dto/reportId.dto";
+import { UpsertReportDto } from "./dto/upsertReport.dto";
 import { ReportsService } from "./reports.service";
 
 @ApiTags("reports")
@@ -45,16 +47,16 @@ export class ReportsController {
     }
 
     /**
-     * Создать отчет
+     * Изменить или создать отчет
      */
     @UseGuards(RetrieveProjectGuard("id", new ParseIntPipe()))
-    @Post("projects/:id/reports")
-    create(
+    @Put("projects/:id/reports")
+    async upsert(
         @Param("id") id: number,
-        @Body() report: CreateReportDto,
+        @Body() report: UpsertReportDto,
         @RetrievedProject() project: Project
     ): Promise<Report> {
-        return this.reportsService.create(project, report);
+        return this.reportsService.upsert(project, report);
     }
 
     /**
@@ -66,5 +68,18 @@ export class ReportsController {
     })
     remove(@Body() { id }: ReportIdDto): Promise<void> {
         return this.reportsService.remove(id);
+    }
+
+    /**
+     * Запрос на данные
+     */
+    @UseGuards(RetrieveProjectGuard("id", new ParseIntPipe()))
+    @Post("projects/:id/query")
+    async query(
+        @Param("id") id: number,
+        @Body() query: QueryDto,
+        @RetrievedProject() project: Project
+    ): Promise<any> {
+        return this.reportsService.query(project, query);
     }
 }

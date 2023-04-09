@@ -30,7 +30,7 @@ export const MetricForm: React.FC<Props> = ({ form }) => {
 
     const navigate = useNavigate();
 
-    const onFinish = async (values: any) => {
+    const handleSubmit = async (values: any) => {
         const result = await upsertMetric({
             projectId: project,
             metric: values,
@@ -48,9 +48,9 @@ export const MetricForm: React.FC<Props> = ({ form }) => {
     return (
         <Form
             name="metric"
-            labelCol={{ span: 8 }}
+            labelCol={{ span: 9 }}
             initialValues={{ remember: true }}
-            onFinish={onFinish}
+            onFinish={handleSubmit}
             autoComplete="off"
             form={form}
         >

@@ -72,7 +72,7 @@ export const MetricsPage: React.FC = () => {
                     render={(_: unknown, metric: Metric) => (
                         <>
                             <Link to="/metrics/create">
-                                <Button type="link">Посмотреть данные</Button>
+                                <Button type="link">Посмотреть</Button>
                             </Link>
                             <Link to={`/metrics/${metric.id}`}>
                                 <Button type="link">Изменить</Button>

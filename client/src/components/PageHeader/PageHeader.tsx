@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
 import { Typography } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./PageHeader.module.scss";
-import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 

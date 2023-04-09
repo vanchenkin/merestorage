@@ -14,6 +14,7 @@ services:
       - PORT=3000
       - SECRET_KEY=
       - INIT_VECTOR=
+      - SAGE_API=
   front:
     image: vanchenkin/merestorage:front-latest
     build:
@@ -21,6 +22,7 @@ services:
       dockerfile: ./docker/front.Dockerfile
       args:
         VITE_API_URL: http://merestorage.ru/api
+        NODE_ENV: prod
     restart: always
     ports:
       - 80:3000

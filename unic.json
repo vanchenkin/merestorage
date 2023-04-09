@@ -130,6 +130,7 @@
                             "name": "app",
                             "envs": {
                                 "POSTGRES_URL": "$[ENV:MERESTORAGE_POSTGRES_URL]",
+                                "SAGE_API": "$[ENV:SAGE_API]",
                                 "NODE_ENV": "dev",
                                 "PORT": "3000",
                                 "SECRET_KEY": "$[ENV:MERESTORAGE_SECRET_KEY]",
@@ -167,6 +168,7 @@
                             "name": "app",
                             "envs": {
                                 "POSTGRES_URL": "$[ENV:MERESTORAGE_POSTGRES_URL]",
+                                "SAGE_API": "$[ENV:SAGE_API]",
                                 "NODE_ENV": "prod",
                                 "PORT": "3000",
                                 "SECRET_KEY": "$[ENV:MERESTORAGE_SECRET_KEY]",
@@ -204,6 +206,7 @@
                             "name": "app",
                             "envs": {
                                 "POSTGRES_URL": "$[ENV:MERESTORAGE_POSTGRES_URL_PROD]",
+                                "SAGE_API": "$[ENV:SAGE_API]",
                                 "NODE_ENV": "dev",
                                 "PORT": "3000",
                                 "SECRET_KEY": "$[ENV:MERESTORAGE_SECRET_KEY_PROD]",

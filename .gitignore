@@ -29,6 +29,7 @@ lerna-debug.log*
 
 # Secrets
 **/.env
+.env.shell
 keys/
 
 # Yarn

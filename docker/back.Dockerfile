@@ -5,10 +5,10 @@ ARG PORT=3000
 
 COPY . .
 
-RUN yarn install --immutable --mode=skip-build
+RUN yarn install --immutable
 
-RUN yarn run build:back && \
-    yarn prisma generate && \
+RUN yarn prisma generate && \
+    yarn run build:back && \
     yarn prod-install dist && \
     ls -lah
 

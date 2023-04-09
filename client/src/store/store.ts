@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { contextReducer } from "./context/contextSlice";
 import { metricsApi } from "./metrics/metricsApi";
 import { projectsApi } from "./projects/projectsApi";
+import { reportsApi } from "./reports/reportsApi";
 import { resourcesApi } from "./resources/resourcesApi";
 
 export const notificator: Middleware = () => (next) => (action) => {
@@ -27,6 +28,7 @@ export const store = configureStore({
         [projectsApi.reducerPath]: projectsApi.reducer,
         [resourcesApi.reducerPath]: resourcesApi.reducer,
         [metricsApi.reducerPath]: metricsApi.reducer,
+        [reportsApi.reducerPath]: reportsApi.reducer,
         context: contextReducer,
     },
     middleware: (getDefaultMiddleware) =>
@@ -36,6 +38,7 @@ export const store = configureStore({
                 projectsApi.middleware,
                 resourcesApi.middleware,
                 metricsApi.middleware,
+                reportsApi.middleware,
             ]),
 });
 

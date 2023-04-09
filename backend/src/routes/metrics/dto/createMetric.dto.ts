@@ -5,6 +5,7 @@ import {
     IsObject,
     IsOptional,
     IsString,
+    NotContains,
     Validate,
 } from "class-validator";
 import { Trim } from "../../../common/decorators/trim.decorator";
@@ -16,6 +17,9 @@ export class CreateMetricDto {
     @IsString()
     @Trim()
     @IsNotEmpty()
+    @NotContains(" ", {
+        message: "Имя метрики не должно содержать пробелов",
+    })
     readonly name: string;
 
     @IsString()

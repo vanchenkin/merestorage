@@ -137,11 +137,12 @@ export class MetricsService {
 
     async consumeSchedules(): Promise<void> {
         this.pgBossService.getInstance().work("metric:*", {}, async (job) => {
+            const metricId = +job.name.substring("metric:".length);
             try {
-                await this.storeMetricData(
-                    +job.name.substring("metric:".length)
-                );
+                await this.storeMetricData(metricId);
             } catch (e) {
+                this.logger.log({ metricId }, "job failed");
+
                 job.done(e as Error);
             }
         });

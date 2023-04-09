@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsNotEmpty, IsObject, IsString } from "class-validator";
-import { ReportTowType } from "../../../../../common/types/ReportRowType";
+import { ReportRowType } from "../../../../../common/types/ReportRow/ReportRowType";
 import { Trim } from "../../../common/decorators/trim.decorator";
 
-export class CreateReportRowDto {
+export class ReportRowDto {
     @IsString()
     @IsNotEmpty()
     readonly name: string;
@@ -13,11 +13,11 @@ export class CreateReportRowDto {
     @IsNotEmpty()
     readonly description: string;
 
-    @IsEnum(ReportTowType)
+    @IsEnum(ReportRowType)
     @ApiProperty({
-        enum: ReportTowType,
+        enum: ReportRowType,
     })
-    readonly type: ReportTowType;
+    readonly type: ReportRowType;
 
     @IsObject()
     readonly query: Record<string, any>;
