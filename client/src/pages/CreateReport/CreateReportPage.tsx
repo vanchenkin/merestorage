@@ -17,8 +17,6 @@ export const CreateReportPage: React.FC<Props> = ({ initialValues }) => {
         Object.entries(initialValues || {}).forEach((entry) =>
             form.setFieldValue(entry[0], entry[1])
         );
-        console.log(initialValues);
-        // form.setFieldValue("rows", []);
     }, [initialValues]);
 
     return (

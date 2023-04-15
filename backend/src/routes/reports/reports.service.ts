@@ -13,7 +13,6 @@ export class ReportsService {
     constructor(private db: PrismaService) {}
 
     async upsert(project: Project, report: UpsertReportDto): Promise<Report> {
-        console.log(report);
         const upsertedReport: Report = await this.db.report.upsert({
             create: {
                 ...report,
@@ -63,7 +62,6 @@ export class ReportsService {
     }
 
     async query(project: Project, query: QueryDto): Promise<any> {
-        console.log(query);
         const values: ChartValue[] = [
             {
                 date: "2010-01",

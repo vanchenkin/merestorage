@@ -53,7 +53,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             message,
         };
 
-        if (process.env.NODE_ENV === "dev") console.log(exception);
+        if (process.env.NODE_ENV === "debug") console.log(exception);
 
         httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
     }
