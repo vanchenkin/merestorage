@@ -7,11 +7,14 @@ import {
 } from "@nestjs/common";
 import { ProjectsService } from "../projects.service";
 
+/**
+ * Берет из query по paramKey id проекта и добавляет его к запросу в request
+ */
 export const RetrieveProjectGuard = (
     paramKey: string,
     ...pipes: PipeTransform[]
 ) => {
-    const transform = async (value: any) => {
+    const transform = async (value: unknown) => {
         return await pipes.reduce(async (prev, pipe) => {
             return await pipe.transform(prev, {
                 type: "query",
@@ -26,7 +29,7 @@ export const RetrieveProjectGuard = (
         async canActivate(context: ExecutionContext): Promise<boolean> {
             const request = context.switchToHttp().getRequest();
             const projectId = await transform(request.params[paramKey]);
-            const project = await this.projectService.get(projectId);
+            const project = await this.projectService.get(projectId as number);
             request.project = project;
             return true;
         }

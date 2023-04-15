@@ -1,10 +1,11 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { Project, Report } from "@prisma/client";
 import { ChartValue } from "../../../../common/types/ChartValue";
-import { ReportRowType } from "../../../../common/types/ReportRow/ReportRowType";
+import { ReportRowType } from "../../../../common/types/ReportRowType";
 import { PrismaService } from "../../common/modules/database/prisma.service";
 import { QueryDto } from "./dto/query.dto";
 import { UpsertReportDto } from "./dto/upsertReport.dto";
+import { QueryResponse } from "../../../../common/types/reports/QueryResponse";
 
 @Injectable()
 export class ReportsService {
@@ -38,9 +39,11 @@ export class ReportsService {
 
     async get(id: number): Promise<Report> {
         const report = await this.db.report.findUnique({ where: { id } });
+
         if (!report) {
             throw new NotFoundException("Отчет не найден");
         }
+
         report.rows = JSON.parse(report?.rows as string);
         return report;
     }
@@ -61,7 +64,7 @@ export class ReportsService {
         this.logger.log({ id }, "report removed");
     }
 
-    async query(project: Project, query: QueryDto): Promise<any> {
+    async query(project: Project, query: QueryDto): Promise<QueryResponse> {
         const values: ChartValue[] = [
             {
                 date: "2010-01",

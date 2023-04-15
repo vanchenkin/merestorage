@@ -23,7 +23,7 @@
                     ]
                 },
                 "prod": {
-                    "name": "front",
+                    "name": "merestorage-front",
                     "namespace": "cobrowsing",
                     "type": "prod",
                     "environment": "yandex-prod",

@@ -1,9 +1,9 @@
-import { IsNotEmpty, IsString, Validate } from "class-validator";
-import { IsPostgresString } from "../../../../../routes/resources/validators/isPostgresString.validator";
+import { IsNotEmpty, IsString } from "class-validator";
+import { Trim } from "../../../../decorators/trim.decorator";
 
 export class PostgresConnection {
     @IsString()
+    @Trim()
     @IsNotEmpty()
-    @Validate(IsPostgresString)
     readonly url: string;
 }

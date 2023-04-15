@@ -12,6 +12,7 @@ export const projectsApi = createApi({
             query: () => `/`,
             providesTags: ["Projects"],
         }),
+
         createProject: builder.mutation<Project, Partial<Project>>({
             query(body) {
                 return {
@@ -29,6 +30,7 @@ export const projectsApi = createApi({
                 });
             },
         }),
+
         removeProject: builder.mutation<Project, Project["id"]>({
             query(id) {
                 return {

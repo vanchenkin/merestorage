@@ -1,5 +1,7 @@
 import React, { CSSProperties, ReactNode } from "react";
 
+import styles from "./Wrapper.module.scss";
+
 type WrapperProps = {
     children: ReactNode;
     style?: CSSProperties;
@@ -7,13 +9,7 @@ type WrapperProps = {
 
 export const Wrapper: React.FC<WrapperProps> = ({ children, style }) => {
     return (
-        <div
-            style={{
-                paddingInline: "10%",
-                paddingTop: "20px",
-                ...style,
-            }}
-        >
+        <div className={styles.wrapper} style={style}>
             {children}
         </div>
     );

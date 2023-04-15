@@ -1,6 +1,6 @@
 import { IsNumber } from "class-validator";
 
-export class ReportIdDto {
+export class IdDto {
     @IsNumber()
     readonly id: number;
 }

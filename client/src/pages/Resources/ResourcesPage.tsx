@@ -10,13 +10,12 @@ import {
 } from "../../store/resources/resourcesApi";
 import { useAppSelector } from "../../store/store";
 
-const { Column } = Table;
-
 export const ResourcesPage: React.FC = () => {
     const project = useAppSelector((state) => state.context.project);
 
     const { data: resources, isLoading: isLoadingData } =
         useGetAllResourcesQuery(project);
+
     const [removeResource] = useRemoveResourceMutation();
 
     return (
@@ -27,7 +26,7 @@ export const ResourcesPage: React.FC = () => {
                 loading={isLoadingData}
                 rowKey={(resource) => resource.id}
             >
-                <Column
+                <Table.Column
                     title="Имя"
                     dataIndex="name"
                     key="name"
@@ -35,23 +34,30 @@ export const ResourcesPage: React.FC = () => {
                     render={(name: string) => (
                         <Badge status="default" text={name} />
                     )}
+                    ellipsis={true}
                 />
-                <Column dataIndex="description" key="description" />
-                <Column
+
+                <Table.Column
+                    dataIndex="description"
+                    key="description"
+                    ellipsis={true}
+                />
+
+                <Table.Column
                     title="Тип ресурса"
                     dataIndex="type"
                     key="type"
-                    width={150}
+                    width={120}
                 />
 
-                <Column
+                <Table.Column
                     title={() => (
                         <Link to="/resources/create">
                             <Button type="link">Создать</Button>
                         </Link>
                     )}
                     align="right"
-                    width={150}
+                    width={120}
                     key="action"
                     render={(_: unknown, resource: Resource) => (
                         <ConfirmModal

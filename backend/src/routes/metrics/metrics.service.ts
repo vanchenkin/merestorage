@@ -9,7 +9,7 @@ import { MetricType } from "../../../../common/types/MetricType";
 import {
     MetricDataType,
     QueryType,
-} from "../../common/classes/resources/types/resourceMapper";
+} from "../../../../common/types/resources/resourceMapper";
 import { PrismaService } from "../../common/modules/database/prisma.service";
 import { PgBossService } from "../../common/modules/pgboss/pgboss.service";
 import { ResourcesService } from "../resources/resources.service";
@@ -49,6 +49,24 @@ export class MetricsService {
     }
 
     async upsert(project: Project, metric: UpsertMetricDto): Promise<Metric> {
+        const foundMetric = await this.db.metric.findFirst({
+            where: {
+                name: metric.name,
+                project: {
+                    id: project.id,
+                },
+                NOT: {
+                    id: metric.id,
+                },
+            },
+        });
+
+        if (foundMetric) {
+            throw new BadRequestException(
+                "Метрика с таким именем уже существует"
+            );
+        }
+
         const upsertedMetric: Metric = await this.db.metric.upsert({
             create: {
                 ...metric,
@@ -97,10 +115,10 @@ export class MetricsService {
         this.logger.log({ id }, "metric removed");
     }
 
-    async storeMetricData(metricId: number): Promise<MetricDataType> {
+    async collectAndStore(metricId: number): Promise<MetricDataType> {
         const metric = await this.get(metricId);
 
-        const data = await this.executeMetricQuery(
+        const value = await this.executeMetricQuery(
             metric.resourceId,
             metric.type,
             metric.query as QueryType
@@ -108,15 +126,16 @@ export class MetricsService {
 
         await this.db.metricData.create({
             data: {
-                data: data,
+                data: value,
                 metric: {
                     connect: { id: metric.id },
                 },
             },
         });
 
-        this.logger.log({ metricId, value: data }, "metric");
-        return data;
+        this.logger.log({ metricId, metricName: metric.name, value }, "metric");
+
+        return value;
     }
 
     async executeMetricQuery(
@@ -124,12 +143,13 @@ export class MetricsService {
         type: MetricType,
         query: QueryType
     ): Promise<MetricDataType> {
-        const resourceEntity = await this.resourcesService.get(resourceId);
-        const resource =
-            this.resourcesService.createResourceClassFromModel(resourceEntity);
+        const resource = await this.resourcesService.get(resourceId);
+
+        const resourceEntity =
+            this.resourcesService.createResourceEntityFromModel(resource);
 
         try {
-            return await resource.getData(query, type);
+            return await resourceEntity.getData(query, type);
         } catch (e: any) {
             throw new BadRequestException(e.message);
         }
@@ -138,18 +158,38 @@ export class MetricsService {
     async consumeSchedules(): Promise<void> {
         this.pgBossService.getInstance().work("metric:*", {}, async (job) => {
             const metricId = +job.name.substring("metric:".length);
+
             try {
-                await this.storeMetricData(metricId);
+                await this.collectAndStore(metricId);
             } catch (e) {
-                this.logger.log({ metricId }, "job failed");
+                this.logger.log({ metricId }, "metric consume failed");
 
                 job.done(e as Error);
             }
         });
     }
 
-    async getMetricData(metricId: number): Promise<MetricData[]> {
-        return this.db.metricData.findMany({
+    async getMetricData(
+        metricId: number,
+        page: number,
+        pageCount: number
+    ): Promise<MetricData[]> {
+        return await this.db.metricData.findMany({
+            where: {
+                metric: {
+                    id: metricId,
+                },
+            },
+            skip: pageCount * (page - 1),
+            take: pageCount,
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+    }
+
+    async getMetricDataCount(metricId: number): Promise<number> {
+        return await this.db.metricData.count({
             where: {
                 metric: {
                     id: metricId,

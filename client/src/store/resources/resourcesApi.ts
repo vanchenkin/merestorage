@@ -17,6 +17,7 @@ export const resourcesApi = createApi({
             query: (projectId) => `/projects/${projectId}/resources`,
             providesTags: ["Resources"],
         }),
+
         createResource: builder.mutation<Resource, CreateResourceProps>({
             query(props) {
                 return {
@@ -34,6 +35,7 @@ export const resourcesApi = createApi({
                 });
             },
         }),
+
         removeResource: builder.mutation<Resource, Resource["id"]>({
             query(id) {
                 return {

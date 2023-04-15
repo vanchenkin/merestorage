@@ -22,6 +22,7 @@ export const ReportRowManager: React.FC<Props> = ({ form }) => {
                             </Button>
                         </div>
                     ))}
+
                     <Form.Item>
                         <Button
                             style={{ marginTop: 15, marginBottom: 15 }}

@@ -50,6 +50,7 @@ export const SageQueryForm: React.FC = () => {
             >
                 <TextArea />
             </Form.Item>
+
             <Form.Item
                 label="Количество логов"
                 labelAlign="left"

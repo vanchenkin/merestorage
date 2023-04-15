@@ -13,7 +13,7 @@ import styles from "./CheckCard.module.scss";
 type Props = {
     title: string;
     apiPath: string;
-    body: Record<string, any>;
+    body: Record<string, unknown>;
     onResult?: (value: boolean) => void;
 };
 

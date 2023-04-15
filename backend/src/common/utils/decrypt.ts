@@ -1,6 +1,9 @@
 import { createDecipheriv } from "crypto";
 
-export const decrypt = (data: string): any => {
+/**
+ * Расшифровывает AES
+ */
+export const decrypt = (data: string): unknown => {
     const cipher = createDecipheriv(
         "aes-256-cbc",
         process.env.SECRET_KEY || "",

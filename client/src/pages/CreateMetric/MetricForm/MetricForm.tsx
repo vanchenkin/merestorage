@@ -7,12 +7,17 @@ import { useGetAllResourcesQuery } from "../../../store/resources/resourcesApi";
 import { useAppSelector } from "../../../store/store";
 import { MetricComponentMapper } from "./types/MetricComponentMapper";
 import cronstrue from "cronstrue/i18n";
+import { Metric } from "@prisma/client";
 
 type Props = {
     form: FormInstance;
 };
 
 export const MetricForm: React.FC<Props> = ({ form }) => {
+    const navigate = useNavigate();
+
+    const project = useAppSelector((state) => state.context.project);
+
     const resourceId = Form.useWatch("resourceId", form);
     const cron = Form.useWatch("cron", form);
 
@@ -23,14 +28,15 @@ export const MetricForm: React.FC<Props> = ({ form }) => {
         });
     } catch {}
 
-    const project = useAppSelector((state) => state.context.project);
     const [upsertMetric, { isLoading }] = useUpsertMetricMutation();
     const { data: resources, isLoading: isLoadingResources } =
         useGetAllResourcesQuery(project);
 
-    const navigate = useNavigate();
+    const resource = resources?.find(
+        (resource) => resource.id === resourceId
+    )?.type;
 
-    const handleSubmit = async (values: any) => {
+    const handleSubmit = async (values: Metric) => {
         const result = await upsertMetric({
             projectId: project,
             metric: values,
@@ -40,10 +46,6 @@ export const MetricForm: React.FC<Props> = ({ form }) => {
             navigate(-1);
         }
     };
-
-    const resource = resources?.find(
-        (resource) => resource.id === resourceId
-    )?.type;
 
     return (
         <Form
@@ -57,6 +59,7 @@ export const MetricForm: React.FC<Props> = ({ form }) => {
             <Form.Item name="id" hidden>
                 <Input hidden />
             </Form.Item>
+
             <Form.Item
                 label="Имя"
                 labelAlign="left"

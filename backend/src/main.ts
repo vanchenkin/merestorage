@@ -2,7 +2,6 @@ import { ValidationPipe } from "@nestjs/common";
 import { HttpAdapterHost, NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
-
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./common/filters/exceptions.filter";
 
@@ -25,7 +24,7 @@ const bootstrap = async () => {
     app.setGlobalPrefix("api");
 
     const config = new DocumentBuilder()
-        .setTitle("MeReStorage")
+        .setTitle("merestorage")
         .setDescription("API description")
         .setVersion("1.0")
         .addTag("methods")

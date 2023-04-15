@@ -1,3 +1,4 @@
+import { Resource } from "@prisma/client";
 import { Form } from "antd";
 import React, { useState } from "react";
 import { CheckCard } from "../../components/CheckCard/CheckCard";
@@ -8,7 +9,8 @@ import { CreateResourceForm } from "./CreateResourceForm/CreateResourceForm";
 import styles from "./CreateResourcePage.module.scss";
 
 const CreateResourcePage: React.FC = () => {
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<Resource>();
+
     const credentials = Form.useWatch("credentials", form);
     const type = Form.useWatch("type", form);
 
@@ -25,11 +27,12 @@ const CreateResourcePage: React.FC = () => {
                         setSuccessCheck={setSuccessCheck}
                     />
                 </div>
+
                 <div className={styles.checkCard}>
                     <CheckCard
                         title="Проверка подключения к ресурсу"
                         body={{ credentials, type }}
-                        apiPath="/resource/check_credentials"
+                        apiPath="/resources/check_credentials"
                         onResult={setSuccessCheck}
                     />
                 </div>

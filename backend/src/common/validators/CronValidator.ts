@@ -5,6 +5,9 @@ import {
 
 import { parseExpression } from "cron-parser";
 
+/**
+ * Валидирует CRON
+ */
 @ValidatorConstraint({ name: "cron", async: false })
 export class CronValidator implements ValidatorConstraintInterface {
     validate(text: string) {
@@ -18,6 +21,6 @@ export class CronValidator implements ValidatorConstraintInterface {
     }
 
     defaultMessage() {
-        return "Cron timestamp is invalid.";
+        return "Cron строка не валидна.";
     }
 }

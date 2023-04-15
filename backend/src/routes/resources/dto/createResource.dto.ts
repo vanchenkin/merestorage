@@ -11,11 +11,12 @@ import { Type } from "class-transformer";
 import {
     ConnectionData,
     ResourceTypeConnectionMapper,
-} from "../../../common/classes/resources/types/resourceMapper";
+} from "../../../common/classes/resources/types/resourceFabricMapper";
 import { ResourceType } from "../../../../../common/types/ResourceType";
 
 export class CreateResourceDto {
     @IsString()
+    @Trim()
     @IsNotEmpty()
     readonly name: string;
 

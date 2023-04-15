@@ -15,13 +15,13 @@ export class ProjectsService {
     constructor(private db: PrismaService) {}
 
     async create(project: CreateProjectDto): Promise<Project> {
-        if (
-            await this.db.project.findFirst({
-                where: {
-                    name: project.name,
-                },
-            })
-        ) {
+        const foundProject = await this.db.project.findFirst({
+            where: {
+                name: project.name,
+            },
+        });
+
+        if (foundProject) {
             throw new BadRequestException(
                 "Проект с таким именем уже существует"
             );

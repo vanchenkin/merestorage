@@ -9,13 +9,13 @@ import { ResourceType } from "../../../../common/types/ResourceType";
 import { ResourceInterface } from "../../common/classes/resources/types/ResourceInterface";
 import {
     ConnectionData,
-    ResourceQueryTypeMapper,
     ResourceTypeClassMapper,
-} from "../../common/classes/resources/types/resourceMapper";
+} from "../../common/classes/resources/types/resourceFabricMapper";
 import { PrismaService } from "../../common/modules/database/prisma.service";
 import { decrypt } from "../../common/utils/decrypt";
 import { encrypt } from "../../common/utils/encrypt";
 import { CreateResourceDto } from "./dto/createResource.dto";
+import { ResourceQueryTypeMapper } from "../../../../common/types/resources/resourceMapper";
 
 @Injectable()
 export class ResourcesService {
@@ -46,9 +46,11 @@ export class ResourcesService {
 
     async get(id: number): Promise<Resource> {
         const resource = await this.db.resource.findUnique({ where: { id } });
+
         if (!resource) {
             throw new NotFoundException("Ресурс не найден");
         }
+
         return resource;
     }
 
@@ -67,29 +69,30 @@ export class ResourcesService {
         type: ResourceType,
         credentials: ConnectionData
     ): Promise<string> {
-        const resource = this.createResourceClass(type, credentials);
+        const resourceEntity = this.createResourceEntity(type, credentials);
 
         try {
-            await resource.checkConnection();
+            await resourceEntity.checkConnection();
+
             return "OK";
-        } catch (e: any) {
-            throw new BadRequestException(e.message);
+        } catch (error: any) {
+            throw new BadRequestException(error.message);
         }
     }
 
-    createResourceClassFromModel(
+    createResourceEntityFromModel(
         resource: Resource
-    ): ResourceInterface<ResourceQueryTypeMapper[typeof resource.type]> {
-        return this.createResourceClass(
+    ): ResourceInterface<ResourceQueryTypeMapper[ResourceType]> {
+        return this.createResourceEntity(
             resource.type,
-            decrypt(resource.credentials)
+            decrypt(resource.credentials) as ConnectionData
         );
     }
 
-    createResourceClass(
+    createResourceEntity(
         type: ResourceType,
         credentials: ConnectionData
-    ): ResourceInterface<ResourceQueryTypeMapper[typeof type]> {
+    ): ResourceInterface<ResourceQueryTypeMapper[ResourceType]> {
         return new ResourceTypeClassMapper[type](credentials);
     }
 }

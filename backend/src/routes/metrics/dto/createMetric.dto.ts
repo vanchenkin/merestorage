@@ -12,13 +12,14 @@ import { Trim } from "../../../common/decorators/trim.decorator";
 import { ApiProperty } from "@nestjs/swagger";
 import { CronValidator } from "../../../common/validators/CronValidator";
 import { MetricType } from "../../../../../common/types/MetricType";
+import { QueryType } from "../../../../../common/types/resources/resourceMapper";
 
 export class CreateMetricDto {
     @IsString()
     @Trim()
     @IsNotEmpty()
     @NotContains(" ", {
-        message: "Имя метрики не должно содержать пробелов",
+        message: "Имя метрики не должно содержать пробелы",
     })
     readonly name: string;
 
@@ -43,5 +44,5 @@ export class CreateMetricDto {
     readonly type: MetricType;
 
     @IsObject()
-    readonly query: Record<string, any>;
+    readonly query: QueryType;
 }

@@ -3,6 +3,4 @@ coverage/
 node_modules/
 jest.config.js
 prettier.config.js
-client/vite.config.ts
-.eslintrc.js
 .yarn/

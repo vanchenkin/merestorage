@@ -25,6 +25,7 @@ type HeaderProps = {
 export const Header: React.FC<HeaderProps> = ({ hideMenu }) => {
     const location = useLocation();
     const navigate = useNavigate();
+
     const currentKey = items
         .filter((item) => location.pathname.includes(item?.key as string))
         .map((item) => item?.key as string);

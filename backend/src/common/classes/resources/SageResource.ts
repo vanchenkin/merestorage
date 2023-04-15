@@ -1,10 +1,10 @@
 import { ResourceInterface } from "./types/ResourceInterface";
 import { SageConnection } from "./types/connections/sageConnection";
 import { BadRequestException } from "@nestjs/common";
-import { MetricDataType } from "./types/resourceMapper";
 import { MetricType } from "../../../../../common/types/MetricType";
 import { Config } from "../../../config/config";
-import { SageQueryType } from "./types/queries/SageQueryType";
+import { SageQueryType } from "../../../../../common/types/resources/queries/SageQueryType";
+import { MetricDataType } from "../../../../../common/types/resources/resourceMapper";
 
 type SageFetchQuery = {
     string: string;
@@ -22,8 +22,8 @@ export class SageResource implements ResourceInterface<SageQueryType> {
 
     private async fetchApi(
         sageQuery: SageFetchQuery
-    ): Promise<Record<string, any>> {
-        const res = await fetch(Config.sageApi, {
+    ): Promise<Record<string, unknown>> {
+        const res = await fetch(Config.SageApi, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -55,18 +55,15 @@ export class SageResource implements ResourceInterface<SageQueryType> {
         }
     }
 
-    async getData(
-        query: SageQueryType,
-        type: MetricType
-    ): Promise<MetricDataType> {
+    private getStartTime(start: string): Date {
         let startTime: Date;
-        if (query.startTime.startsWith("-")) {
+
+        if (start.startsWith("-")) {
             startTime = new Date();
-            const lastChar = query.startTime[query.startTime.length - 1];
-            const offset = +query.startTime.substring(
-                1,
-                query.startTime.length - 1
-            );
+
+            const lastChar = start[start.length - 1];
+            const offset = +start.substring(1, start.length - 1);
+
             if (lastChar === "m") {
                 startTime.setMinutes(-offset);
             } else if (lastChar === "h") {
@@ -74,18 +71,33 @@ export class SageResource implements ResourceInterface<SageQueryType> {
             } else if (lastChar === "d") {
                 startTime.setDate(-offset);
             } else {
-                startTime = new Date(query.startTime);
+                startTime = new Date(start);
             }
         } else {
-            startTime = new Date(query.startTime);
+            startTime = new Date(start);
         }
 
+        return startTime;
+    }
+
+    private getEndTime(end: string): Date {
         let endTime: Date;
-        if (query.endTime === "now") endTime = new Date();
-        else endTime = new Date(query.endTime);
+        if (end === "now") endTime = new Date();
+        else endTime = new Date(end);
+
+        return endTime;
+    }
+
+    async getData(
+        query: SageQueryType,
+        type: MetricType
+    ): Promise<MetricDataType> {
+        const startTime = this.getStartTime(query.startTime);
+
+        const endTime = this.getEndTime(query.endTime);
 
         const res = await this.fetchApi({
-            string: query.string, // доступ только для тех у кого есть доступ в кобраузинг TODO: поменять
+            string: query.string,
             startTime,
             endTime,
             size: +query.size,
@@ -95,7 +107,7 @@ export class SageResource implements ResourceInterface<SageQueryType> {
             throw new BadRequestException(res.error);
         }
 
-        const hits = res.hits as Record<string, any>[];
+        const hits = res.hits as Record<string, unknown>[];
 
         if (type === MetricType.Number) {
             if (hits.length !== 1)
@@ -114,11 +126,18 @@ export class SageResource implements ResourceInterface<SageQueryType> {
             if (Object.values(hits[0]).length !== 2)
                 throw new Error("Должно быть только 2 колонки");
 
-            const data = hits.reduce((prev, row) => {
+            const data = hits.reduce<Record<string, number>>((prev, row) => {
                 const values = Object.values(row);
+
+                if (typeof values[1] !== "number") {
+                    throw new Error(
+                        "Значения во второй колонке должны быть числами"
+                    );
+                }
+
                 return {
                     ...prev,
-                    [values[0]]: values[1],
+                    [values[0] as string]: values[1],
                 };
             }, {});
 

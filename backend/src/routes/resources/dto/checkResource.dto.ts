@@ -4,7 +4,7 @@ import { Type } from "class-transformer";
 import {
     ConnectionData,
     ResourceTypeConnectionMapper,
-} from "../../../common/classes/resources/types/resourceMapper";
+} from "../../../common/classes/resources/types/resourceFabricMapper";
 import { ResourceType } from "../../../../../common/types/ResourceType";
 
 export class CheckResourceDto {
@@ -16,8 +16,8 @@ export class CheckResourceDto {
 
     @IsObject()
     @ValidateNested()
-    @Type((type) => {
-        return ResourceTypeConnectionMapper[type?.object.type as ResourceType];
+    @Type((data) => {
+        return ResourceTypeConnectionMapper[data?.object.type as ResourceType];
     })
     readonly credentials: ConnectionData;
 }

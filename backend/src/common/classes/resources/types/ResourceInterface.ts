@@ -1,5 +1,5 @@
 import { MetricType } from "../../../../../../common/types/MetricType";
-import { MetricDataType } from "./resourceMapper";
+import { MetricDataType } from "../../../../../../common/types/resources/resourceMapper";
 
 export interface ResourceInterface<T> {
     checkConnection: () => Promise<void>;

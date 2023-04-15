@@ -15,6 +15,7 @@ import { ReportsModule } from "./routes/reports/reports.module";
 
 @Module({
     imports: [
+        // utils
         PromModule,
         PrometheusModule.register(MetricsConfig),
         LoggerModule.forRoot(LoggerConfig),
@@ -25,12 +26,12 @@ import { ReportsModule } from "./routes/reports/reports.module";
         HealthModule,
         PrismaModule,
         PgBossModule,
-        // роуты
+
+        // routes
         ProjectsModule,
         ResourcesModule,
         MetricsModule,
         ReportsModule,
     ],
-    controllers: [],
 })
 export class AppModule {}

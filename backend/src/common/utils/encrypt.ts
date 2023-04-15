@@ -1,6 +1,9 @@
 import { createCipheriv } from "crypto";
 
-export const encrypt = (data: any): string => {
+/**
+ * Зашифровывает c помощью AES
+ */
+export const encrypt = (data: unknown): string => {
     const cipher = createCipheriv(
         "aes-256-cbc",
         process.env.SECRET_KEY || "",

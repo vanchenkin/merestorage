@@ -1,7 +1,9 @@
 import { Report, Project } from "@prisma/client";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { notification } from "antd";
-import { ReportRowType } from "../../../../common/types/ReportRow/ReportRowType";
+import { ReportRowType } from "../../../../common/types/ReportRowType";
+import { QueryType } from "../../../../common/types/reports/grammarMapper";
+import { QueryResponse } from "../../../../common/types/reports/QueryResponse";
 import { Config } from "../../config";
 
 export type CreateReportProps = {
@@ -12,14 +14,9 @@ export type CreateReportProps = {
 export type GetPreviewProps = {
     projectId: Project["id"] | null;
     query: {
-        string: string;
         type: ReportRowType;
+        query: QueryType;
     };
-};
-
-export type GetPreviewResponse = {
-    hit: any;
-    type: ReportRowType;
 };
 
 export const reportsApi = createApi({
@@ -31,15 +28,7 @@ export const reportsApi = createApi({
             query: (projectId) => `/projects/${projectId}/reports`,
             providesTags: ["Reports"],
         }),
-        getPreviewData: builder.mutation<GetPreviewResponse, GetPreviewProps>({
-            query({ query, projectId }) {
-                return {
-                    url: `/projects/${projectId}/query`,
-                    method: "POST",
-                    body: query,
-                };
-            },
-        }),
+
         createReport: builder.mutation<Report, CreateReportProps>({
             query(props) {
                 return {
@@ -57,6 +46,7 @@ export const reportsApi = createApi({
                 });
             },
         }),
+
         upsertReport: builder.mutation<Report, CreateReportProps>({
             query(props) {
                 return {
@@ -74,6 +64,7 @@ export const reportsApi = createApi({
                 });
             },
         }),
+
         removeReport: builder.mutation<Report, Report["id"]>({
             query(id) {
                 return {
@@ -91,6 +82,16 @@ export const reportsApi = createApi({
                         message: "Успешно",
                     });
                 });
+            },
+        }),
+
+        getPreviewData: builder.mutation<QueryResponse, GetPreviewProps>({
+            query({ query, projectId }) {
+                return {
+                    url: `/projects/${projectId}/query`,
+                    method: "POST",
+                    body: query,
+                };
             },
         }),
     }),

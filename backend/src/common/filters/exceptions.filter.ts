@@ -3,11 +3,11 @@ import {
     BadRequestException,
     Catch,
     ExceptionFilter,
-    HttpAdapterHost,
     HttpException,
     HttpStatus,
     Logger,
 } from "@nestjs/common";
+import { HttpAdapterHost } from "@nestjs/core";
 
 export type ExceptionType = HttpException | Error;
 export type BadRequestResponseType = string | { message: string };
@@ -27,6 +27,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
                 ? exception.getStatus()
                 : HttpStatus.INTERNAL_SERVER_ERROR;
 
+        // format message
         let message;
 
         if (exception instanceof BadRequestException) {

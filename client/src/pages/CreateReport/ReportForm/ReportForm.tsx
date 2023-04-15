@@ -5,6 +5,7 @@ import { useUpsertReportMutation } from "../../../store/reports/reportsApi";
 import { useAppSelector } from "../../../store/store";
 import { Typography } from "antd";
 import { ReportRowManager } from "./ReportRowManager";
+import { Report } from "@prisma/client";
 
 type Props = {
     form: FormInstance;
@@ -12,10 +13,12 @@ type Props = {
 
 export const ReportForm: React.FC<Props> = ({ form }) => {
     const navigate = useNavigate();
+
     const project = useAppSelector((state) => state.context.project);
+
     const [upsertReport, { isLoading }] = useUpsertReportMutation();
 
-    const handleSubmit = async (values: any) => {
+    const handleSubmit = async (values: Report) => {
         const result = await upsertReport({
             projectId: project,
             report: values,
@@ -38,6 +41,7 @@ export const ReportForm: React.FC<Props> = ({ form }) => {
             <Form.Item name="id" hidden>
                 <Input hidden />
             </Form.Item>
+
             <Form.Item
                 label="Имя"
                 labelAlign="left"

@@ -1,14 +1,10 @@
 import { Params } from "nestjs-pino";
+import { getLocalTimestamp } from "../../../../common/utils/getLocalTimestamp";
 import { version } from "../../../../package.json";
-
-const getLocalTimestamp = (): string => {
-    const offset = new Date().getTimezoneOffset() * 60000;
-    return new Date(Date.now() - offset).toISOString().slice(0, -1);
-};
 
 export const LoggerConfig: Params = {
     pinoHttp: {
-        timestamp: () => `,"@timestamp":"${getLocalTimestamp()}"`,
+        timestamp: () => `,"@timestamp":"${getLocalTimestamp(Date.now())}"`,
         base: {
             system: "merestorage",
             inst: process.env.POD_NAME,

@@ -1,13 +1,14 @@
+import { Report } from "@prisma/client";
 import { Form } from "antd";
 import React, { useEffect } from "react";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
 import { Wrapper } from "../../components/Wrapper/Wrapper";
-
-import styles from "./CreateReportPage.module.scss";
 import { ReportForm } from "./ReportForm/ReportForm";
 
+import styles from "./CreateReportPage.module.scss";
+
 type Props = {
-    initialValues?: Record<string, any>;
+    initialValues?: Report;
 };
 
 export const CreateReportPage: React.FC<Props> = ({ initialValues }) => {
@@ -22,10 +23,9 @@ export const CreateReportPage: React.FC<Props> = ({ initialValues }) => {
     return (
         <Wrapper>
             <PageHeader navigateTo="/reports">
-                {Object.keys(initialValues || {}).length !== 0
-                    ? "Изменение отчета"
-                    : "Создание отчета"}
+                {initialValues ? "Изменение отчета" : "Создание отчета"}
             </PageHeader>
+
             <div className={styles.wrapper}>
                 <div className={styles.form}>
                     <ReportForm form={form} />

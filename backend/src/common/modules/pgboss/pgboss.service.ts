@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleDestroy } from "@nestjs/common";
 import PgBoss from "pg-boss";
 
-const PostgresMaxConnections = 4;
+const PostgresMaxConnections = 2;
 const PostgresArchiveAfterSeconds = 30 * 60; // 30 minutes
 const PostgresDeleteArchivedAfterSeconds = 6 * 60 * 60; // 6 hours
 
@@ -20,7 +20,7 @@ export class PgBossService implements OnModuleDestroy {
         });
 
         this.instance.on("error", (error: Error) => {
-            this.logger.log({ error: error.message }, "queue error");
+            this.logger.error({ error: error.message }, "queue error");
         });
 
         this.instance.start();

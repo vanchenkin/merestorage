@@ -1,3 +1,4 @@
+import { Resource } from "@prisma/client";
 import { Button, Form, FormInstance, Input, Select, Tooltip } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +8,7 @@ import { useAppSelector } from "../../../store/store";
 import { ResourceTypeComponentMapper } from "./types/ResourceTypeComponentMapper";
 
 type Props = {
-    form: FormInstance;
+    form: FormInstance<Resource>;
     setSuccessCheck: (value: boolean) => void;
     successCheck: boolean;
 };
@@ -17,14 +18,15 @@ export const CreateResourceForm: React.FC<Props> = ({
     setSuccessCheck,
     successCheck,
 }) => {
-    const [type, setType] = useState<ResourceType>();
-
-    const project = useAppSelector((state) => state.context.project);
-    const [createResource, { isLoading }] = useCreateResourceMutation();
-
     const navigate = useNavigate();
 
-    const onFinish = async (values: any) => {
+    const project = useAppSelector((state) => state.context.project);
+
+    const [createResource, { isLoading }] = useCreateResourceMutation();
+
+    const [type, setType] = useState<ResourceType>();
+
+    const onFinish = async (values: Resource) => {
         const result = await createResource({
             projectId: project,
             resource: values,

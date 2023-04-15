@@ -1,5 +1,5 @@
 {
     "**/*.{ts,js,tsx}": ["prettier --write", "yarn eslint --fix"],
-    "client/**/*.{scss,css}": ["prettier --write", "yarn stylelint --fix"],
+    "**/*.{scss,css}": ["prettier --write", "yarn stylelint --fix"],
     "**/*.{md,json,template.html}": ["prettier --write"]
 }

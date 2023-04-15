@@ -7,18 +7,22 @@ import {
     Delete,
     ParseIntPipe,
     UseGuards,
-    HttpCode,
     Put,
+    Query,
 } from "@nestjs/common";
 import { MetricsService } from "./metrics.service";
-import { ApiNotFoundResponse, ApiTags } from "@nestjs/swagger";
+import {
+    ApiBadRequestResponse,
+    ApiNotFoundResponse,
+    ApiTags,
+} from "@nestjs/swagger";
 import { Metric, MetricData, Project } from "@prisma/client";
 import { RetrievedProject } from "../projects/decorators/project.decorator";
 import { RetrieveProjectGuard } from "../projects/guards/project.guard";
-import { MetricIdDto } from "./dto/metricId.dto";
 import { CheckQueryDto } from "./dto/checkQuery.dto";
 import { UpsertMetricDto } from "./dto/upsertMetric.dto";
-import { MetricDataType } from "../../common/classes/resources/types/resourceMapper";
+import { IdDto } from "../../common/dto/Id.dto";
+import { MetricDataType } from "../../../../common/types/resources/resourceMapper";
 
 @ApiTags("metrics")
 @Controller()
@@ -31,7 +35,7 @@ export class MetricsController {
     @UseGuards(RetrieveProjectGuard("id", new ParseIntPipe()))
     @Get("projects/:id/metrics")
     async getAll(
-        @Param("id") id: number,
+        @Param("id") _: number,
         @RetrievedProject() project: Project
     ): Promise<Metric[]> {
         return this.metricsService.getByProject(project);
@@ -53,8 +57,11 @@ export class MetricsController {
      */
     @UseGuards(RetrieveProjectGuard("id", new ParseIntPipe()))
     @Put("projects/:id/metrics")
+    @ApiBadRequestResponse({
+        description: "Имя метрики должно быть уникальным в рамках проекта",
+    })
     async upsert(
-        @Param("id") id: number,
+        @Param("id") _: number,
         @Body() metric: UpsertMetricDto,
         @RetrievedProject() project: Project
     ): Promise<Metric> {
@@ -68,15 +75,14 @@ export class MetricsController {
     @ApiNotFoundResponse({
         description: "Метрика не найдена",
     })
-    remove(@Body() { id }: MetricIdDto): Promise<void> {
+    remove(@Body() { id }: IdDto): Promise<void> {
         return this.metricsService.remove(id);
     }
 
     /**
      * Проверка запроса
      */
-    @Post("metric/check_query")
-    @HttpCode(200)
+    @Post("metrics/check_query")
     async check(
         @Body() { type, query, resourceId }: CheckQueryDto
     ): Promise<{ message: string; statusCode: number }> {
@@ -93,20 +99,25 @@ export class MetricsController {
     }
 
     /**
-     * Собрать и сохранить метрику
+     * Собрать и сохранить данные метрики
      */
-    @Post("metric/store")
-    @HttpCode(200)
-    store(@Body() { id }: MetricIdDto): Promise<MetricDataType> {
-        return this.metricsService.storeMetricData(id);
+    @Post("metrics/collect")
+    collectAndStore(@Body() { id }: IdDto): Promise<MetricDataType> {
+        return this.metricsService.collectAndStore(id);
     }
 
     /**
-     * Получить все данные по метрике
+     * Получить данные по метрике
      */
-    @Post("metric/:id/data")
-    @HttpCode(200)
-    getMetricData(@Body() { id }: MetricIdDto): Promise<MetricData[]> {
-        return this.metricsService.getMetricData(id);
+    @Get("metrics/:id/data")
+    async getMetricData(
+        @Param("id", ParseIntPipe) id: number,
+        @Query("page", ParseIntPipe) page: number,
+        @Query("pageCount", ParseIntPipe) pageCount: number
+    ): Promise<{ data: MetricData[]; total: number }> {
+        return {
+            data: await this.metricsService.getMetricData(id, page, pageCount),
+            total: await this.metricsService.getMetricDataCount(id),
+        };
     }
 }

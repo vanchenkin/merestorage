@@ -1,7 +1,7 @@
 import { IsEnum, IsNumber, IsObject } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { QueryType } from "../../../common/classes/resources/types/resourceMapper";
 import { MetricType } from "../../../../../common/types/MetricType";
+import { QueryType } from "../../../../../common/types/resources/resourceMapper";
 
 export class CheckQueryDto {
     @IsEnum(MetricType)

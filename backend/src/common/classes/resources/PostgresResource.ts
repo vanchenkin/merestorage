@@ -1,9 +1,9 @@
 import { PostgresConnection } from "./types/connections/postgresConnection";
 import { ResourceInterface } from "./types/ResourceInterface";
 import { Client } from "pg";
-import { PostgresQueryType } from "./types/queries/PostgresQueryType";
-import { MetricDataType } from "./types/resourceMapper";
+import { PostgresQueryType } from "../../../../../common/types/resources/queries/PostgresQueryType";
 import { MetricType } from "../../../../../common/types/MetricType";
+import { MetricDataType } from "../../../../../common/types/resources/resourceMapper";
 
 export class PostgresResource implements ResourceInterface<PostgresQueryType> {
     readonly url: string;
@@ -25,13 +25,17 @@ export class PostgresResource implements ResourceInterface<PostgresQueryType> {
         type: MetricType
     ): Promise<MetricDataType> {
         await this.connection.connect();
+
+        // ставим рид-онли для безопасности
         await this.connection.query(
             "SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY"
         );
+
         const { rows, rowCount } = await this.connection.query(
             query.string,
             undefined
         );
+
         try {
             if (type === MetricType.Number) {
                 if (rowCount !== 1)
@@ -41,7 +45,7 @@ export class PostgresResource implements ResourceInterface<PostgresQueryType> {
                 if (values.length !== 1)
                     throw new Error("Должна быть только 1 колонка");
 
-                const firstValue = Object.values(values)[0] as number;
+                const firstValue = +(Object.values(values)[0] as string);
 
                 if (isNaN(firstValue)) throw new Error("Не число");
 

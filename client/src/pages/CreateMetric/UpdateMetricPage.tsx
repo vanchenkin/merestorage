@@ -4,11 +4,11 @@ import { useParams } from "react-router-dom";
 import { Loader } from "../../components/Loader/Loader";
 import { useGetAllMetricsQuery } from "../../store/metrics/metricsApi";
 import { useAppSelector } from "../../store/store";
-
 import { CreateMetricPage } from "./CreateMetricPage";
 
 const UpdateMetricPage: React.FC = () => {
     const { metricId } = useParams();
+
     const project = useAppSelector((state) => state.context.project);
 
     const { data: metrics, isLoading } = useGetAllMetricsQuery(project);

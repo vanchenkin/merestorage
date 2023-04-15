@@ -1,9 +1,7 @@
-import type { ResourceType as ResourceTypeOrigin } from "@prisma/client";
-
-export const ResourceType: { [k in ResourceTypeOrigin]: k } = {
+export const ResourceType = {
     Cassandra: "Cassandra",
     Postgres: "Postgres",
     Sage: "Sage",
 } as const;
 
-export type ResourceType = ResourceTypeOrigin;
+export type ResourceType = (typeof ResourceType)[keyof typeof ResourceType];

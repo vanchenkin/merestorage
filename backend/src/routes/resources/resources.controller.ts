@@ -3,7 +3,6 @@ import {
     Controller,
     Delete,
     Get,
-    HttpCode,
     Param,
     ParseIntPipe,
     Post,
@@ -11,12 +10,11 @@ import {
 } from "@nestjs/common";
 import { ApiNotFoundResponse, ApiTags } from "@nestjs/swagger";
 import { Project, Resource } from "@prisma/client";
+import { IdDto } from "../../common/dto/Id.dto";
 import { RetrievedProject } from "../projects/decorators/project.decorator";
 import { RetrieveProjectGuard } from "../projects/guards/project.guard";
 import { CheckResourceDto } from "./dto/checkResource.dto";
 import { CreateResourceDto } from "./dto/createResource.dto";
-import { RemoveResourceDto } from "./dto/removeResource.dto";
-
 import { ResourcesService } from "./resources.service";
 
 @ApiTags("resources")
@@ -30,7 +28,7 @@ export class ResourcesController {
     @UseGuards(RetrieveProjectGuard("id", new ParseIntPipe()))
     @Get("projects/:id/resources")
     async getAll(
-        @Param("id") id: number,
+        @Param("id") _: number,
         @RetrievedProject() project: Project
     ): Promise<Resource[]> {
         return this.resourcesService.getByProject(project);
@@ -53,7 +51,7 @@ export class ResourcesController {
     @UseGuards(RetrieveProjectGuard("id", new ParseIntPipe()))
     @Post("projects/:id/resources")
     create(
-        @Param("id") id: number,
+        @Param("id") _: number,
         @Body() resource: CreateResourceDto,
         @RetrievedProject() project: Project
     ): Promise<Resource> {
@@ -67,15 +65,14 @@ export class ResourcesController {
     @ApiNotFoundResponse({
         description: "Ресурс не найден",
     })
-    remove(@Body() { id }: RemoveResourceDto): Promise<void> {
+    remove(@Body() { id }: IdDto): Promise<void> {
         return this.resourcesService.remove(id);
     }
 
     /**
-     * Проверка ресурса
+     * Проверка подключения
      */
-    @Post("resource/check_credentials")
-    @HttpCode(200)
+    @Post("resources/check_credentials")
     async check(
         @Body() { type, credentials }: CheckResourceDto
     ): Promise<{ message: string; statusCode: number }> {

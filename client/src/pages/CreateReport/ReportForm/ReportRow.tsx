@@ -1,13 +1,17 @@
-import { Button, Form, FormInstance, Input, Select } from "antd";
 import React from "react";
-import { ReportRowType } from "../../../../../common/types/ReportRow/ReportRowType";
+import { Button, Form, FormInstance, Input, Select } from "antd";
+import { ReportRowType } from "../../../../../common/types/ReportRowType";
 import { Chart } from "../../../components/ReportVisual/Chart/Chart";
 import { Number } from "../../../components/ReportVisual/Number/Number";
 import { useGetPreviewDataMutation } from "../../../store/reports/reportsApi";
 import { useAppSelector } from "../../../store/store";
+import { ChartResponse } from "../../../../../common/types/reports/responses/ChartResponse";
+import { NumberResponse } from "../../../../../common/types/reports/responses/NumberResponse";
+import { QueryType } from "../../../../../common/types/reports/grammarMapper";
 
 type Props = {
     form: FormInstance;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     field: Record<string, any>;
 };
 
@@ -15,20 +19,24 @@ export const ReportRow: React.FC<Props> = ({
     form,
     field: { name, ...restField },
 }) => {
-    const rowType = Form.useWatch(["rows", name, "type"], form);
-    const rowName = Form.useWatch(["rows", name, "name"], form);
-    const rowDescription = Form.useWatch(["rows", name, "description"], form);
-
     const project = useAppSelector((state) => state.context.project);
+
+    const rowType: ReportRowType = Form.useWatch(["rows", name, "type"], form);
+    const rowName: string = Form.useWatch(["rows", name, "name"], form);
+    const rowDescription: string = Form.useWatch(
+        ["rows", name, "description"],
+        form
+    );
 
     const [getPreview, { data, isLoading }] = useGetPreviewDataMutation();
 
     const handlePreview = (name: number) => {
-        const query = form.getFieldValue(["rows", name, "query"]);
+        const query = form.getFieldValue(["rows", name, "query"]) as QueryType;
+
         getPreview({
             query: {
                 type: rowType,
-                ...query,
+                query: query,
             },
             projectId: project,
         });
@@ -58,7 +66,6 @@ export const ReportRow: React.FC<Props> = ({
                 labelAlign="left"
                 rules={[
                     {
-                        required: true,
                         message: "Введите описание ряда",
                     },
                 ]}
@@ -119,7 +126,7 @@ export const ReportRow: React.FC<Props> = ({
                     <Chart
                         name={rowName}
                         description={rowDescription}
-                        values={data.hit}
+                        values={data.hit as ChartResponse}
                     />
                 )}
 
@@ -129,7 +136,7 @@ export const ReportRow: React.FC<Props> = ({
                     <Number
                         name={rowName}
                         description={rowDescription}
-                        value={data.hit}
+                        value={data.hit as NumberResponse}
                     />
                 )}
         </>

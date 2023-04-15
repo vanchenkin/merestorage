@@ -11,13 +11,12 @@ import {
     useRemoveMetricMutation,
 } from "../../store/metrics/metricsApi";
 
-const { Column } = Table;
-
 export const MetricsPage: React.FC = () => {
     const project = useAppSelector((state) => state.context.project);
 
     const { data: metrics, isLoading: isLoadingData } =
         useGetAllMetricsQuery(project);
+
     const [removeMetric] = useRemoveMetricMutation();
 
     return (
@@ -28,7 +27,7 @@ export const MetricsPage: React.FC = () => {
                 loading={isLoadingData}
                 rowKey={(resource) => resource.id}
             >
-                <Column
+                <Table.Column
                     title="Имя"
                     dataIndex="name"
                     key="name"
@@ -36,47 +35,59 @@ export const MetricsPage: React.FC = () => {
                     render={(name: string) => (
                         <Badge status="default" text={name} />
                     )}
+                    ellipsis={true}
                 />
-                <Column dataIndex="description" key="description" />
-                <Column
+
+                <Table.Column
+                    dataIndex="description"
+                    key="description"
+                    ellipsis={true}
+                />
+
+                <Table.Column
                     title="Имя ресурса"
                     key="resource.name"
                     width={150}
                     render={(metric) => metric.resource.name}
+                    ellipsis={true}
                 />
-                <Column
+
+                <Table.Column
                     title="Тип метрики"
                     dataIndex="type"
                     key="type"
-                    width={150}
+                    width={110}
                 />
 
-                <Column
+                <Table.Column
                     title="Периодичность сбора"
                     key="cron"
                     width={150}
                     render={(metric) =>
-                        cronstrue.toString(metric.cron, { locale: "ru" })
+                        metric.cron
+                            ? cronstrue.toString(metric.cron, { locale: "ru" })
+                            : "-"
                     }
                 />
 
-                <Column
+                <Table.Column
                     title={() => (
                         <Link to="/metrics/create">
                             <Button type="link">Создать</Button>
                         </Link>
                     )}
                     align="right"
-                    width={150}
+                    width={130}
                     key="action"
                     render={(_: unknown, metric: Metric) => (
                         <>
-                            <Link to="/metrics/create">
-                                <Button type="link">Посмотреть</Button>
+                            <Link to={`/metrics/${metric.id}/view`}>
+                                <Button type="link">Данные</Button>
                             </Link>
                             <Link to={`/metrics/${metric.id}`}>
                                 <Button type="link">Изменить</Button>
                             </Link>
+
                             <ConfirmModal
                                 message={`Вы уверены что хотите удалить метрику ${metric.name}?`}
                                 description="Восстановить её не получится"

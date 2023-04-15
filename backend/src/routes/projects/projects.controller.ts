@@ -1,20 +1,12 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    ParseIntPipe,
-    Post,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
 import {
     ApiBadRequestResponse,
     ApiNotFoundResponse,
     ApiTags,
 } from "@nestjs/swagger";
 import { Project } from "@prisma/client";
+import { IdDto } from "../../common/dto/Id.dto";
 import { CreateProjectDto } from "./dto/createProject.dto";
-import { RemoveProjectDto } from "./dto/removeProject.dto";
 import { ProjectsService } from "./projects.service";
 
 @ApiTags("projects")
@@ -31,22 +23,11 @@ export class ProjectsController {
     }
 
     /**
-     * Получить проект по id
-     */
-    @Get(":id")
-    @ApiNotFoundResponse({
-        description: "Проект не найден",
-    })
-    async get(@Param("id", ParseIntPipe) id: number): Promise<Project> {
-        return this.projectsService.get(id);
-    }
-
-    /**
      * Создать проект
      */
     @Post()
     @ApiBadRequestResponse({
-        description: "Имя процесса должно быть уникальным",
+        description: "Имя проекта должно быть уникальным",
     })
     create(@Body() project: CreateProjectDto): Promise<Project> {
         return this.projectsService.create(project);
@@ -59,7 +40,7 @@ export class ProjectsController {
     @ApiNotFoundResponse({
         description: "Проект не найден",
     })
-    remove(@Body() { id }: RemoveProjectDto): Promise<void> {
+    remove(@Body() { id }: IdDto): Promise<void> {
         return this.projectsService.remove(id);
     }
 }

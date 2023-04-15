@@ -1,8 +1,6 @@
-import type { MetricType as MetricTypeOrigin } from "@prisma/client";
-
-export const MetricType: { [k in MetricTypeOrigin]: k } = {
+export const MetricType = {
     Number: "Number",
     Object: "Object",
 } as const;
 
-export type MetricType = MetricTypeOrigin;
+export type MetricType = (typeof MetricType)[keyof typeof MetricType];

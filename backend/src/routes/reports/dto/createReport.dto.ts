@@ -5,6 +5,7 @@ import { ReportRowDto } from "./reportRow.dto";
 
 export class CreateReportDto {
     @IsString()
+    @Trim()
     @IsNotEmpty()
     readonly name: string;
 

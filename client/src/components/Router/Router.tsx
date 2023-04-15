@@ -21,18 +21,20 @@ const CreateReportPage = lazy(
 const UpdateReportPage = lazy(
     () => import("../../pages/CreateReport/UpdateReportPage")
 );
-const TestReportPage = lazy(() => import("../../pages/Test/TestReportPage"));
 const ReportPage = lazy(() => import("../../pages/Report/ReportPage"));
+const MetricPage = lazy(() => import("../../pages/Metric/MetricPage"));
 
 export const Router: React.FC = () => {
     return (
         <Suspense fallback={<Loader />}>
             <Routes>
                 <Route path="/" element={<MainPage />} />
+
                 <Route path="resources">
                     <Route path="" element={<ResourcesPage />} />
                     <Route path="create" element={<CreateResourcePage />} />
                 </Route>
+
                 <Route path="reports">
                     <Route path="" element={<ReportsPage />} />
                     <Route path=":reportId">
@@ -41,12 +43,16 @@ export const Router: React.FC = () => {
                     </Route>
                     <Route path="create" element={<CreateReportPage />} />
                 </Route>
+
                 <Route path="metrics">
                     <Route path="" element={<MetricsPage />} />
-                    <Route path=":metricId" element={<UpdateMetricPage />} />
+                    <Route path=":metricId">
+                        <Route path="" element={<UpdateMetricPage />} />
+                        <Route path="view" element={<MetricPage />} />
+                    </Route>
                     <Route path="create" element={<CreateMetricPage />} />
                 </Route>
-                <Route path="test/report" element={<TestReportPage />} />
+
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Suspense>

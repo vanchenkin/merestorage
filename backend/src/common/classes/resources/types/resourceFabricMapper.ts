@@ -1,4 +1,3 @@
-import { MetricType } from "../../../../../../common/types/MetricType";
 import { ResourceType } from "../../../../../../common/types/ResourceType";
 import { CassandraResource } from "../CassandraResource";
 import { PostgresResource } from "../PostgresResource";
@@ -6,9 +5,6 @@ import { SageResource } from "../SageResource";
 import { CassandraConnection } from "./connections/cassandraConnection";
 import { PostgresConnection } from "./connections/postgresConnection";
 import { SageConnection } from "./connections/sageConnection";
-import { CassandraQueryType } from "./queries/CassandraQueryType";
-import { PostgresQueryType } from "./queries/PostgresQueryType";
-import { SageQueryType } from "./queries/SageQueryType";
 
 export const ResourceTypeConnectionMapper = {
     [ResourceType.Postgres]: PostgresConnection,
@@ -16,6 +12,7 @@ export const ResourceTypeConnectionMapper = {
     [ResourceType.Sage]: SageConnection,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ResourceTypeClassMapper: Record<ResourceType, any> = {
     [ResourceType.Postgres]: PostgresResource,
     [ResourceType.Cassandra]: CassandraResource,
@@ -24,17 +21,3 @@ export const ResourceTypeClassMapper: Record<ResourceType, any> = {
 
 export type ConnectionData =
     (typeof ResourceTypeConnectionMapper)[ResourceType];
-
-export type MetricDataTypeMapper = {
-    [MetricType.Number]: number;
-    [MetricType.Object]: Record<string, number>;
-};
-
-export type ResourceQueryTypeMapper = {
-    [ResourceType.Postgres]: PostgresQueryType;
-    [ResourceType.Cassandra]: CassandraQueryType;
-    [ResourceType.Sage]: SageQueryType;
-};
-
-export type QueryType = ResourceQueryTypeMapper[ResourceType];
-export type MetricDataType = MetricDataTypeMapper[MetricType];

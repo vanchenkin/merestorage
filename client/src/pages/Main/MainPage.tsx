@@ -10,8 +10,6 @@ import {
 
 import styles from "./Main.module.scss";
 
-const { Text, Title } = Typography;
-
 const MainPage: React.FC = () => {
     return (
         <Wrapper
@@ -22,12 +20,12 @@ const MainPage: React.FC = () => {
                 alignItems: "center",
             }}
         >
-            <Title style={{ marginBottom: 0, marginTop: "30px" }}>
+            <Typography.Title style={{ marginBottom: 0, marginTop: "30px" }}>
                 MeReStorage
-            </Title>
-            <Title style={{ marginTop: "10px" }} level={4}>
+            </Typography.Title>
+            <Typography.Title style={{ marginTop: "10px" }} level={4}>
                 Сервис долгосрочного хранения метрик и генерации отчетов
-            </Title>
+            </Typography.Title>
             <ProjectSelect
                 style={{
                     marginTop: "10px",
@@ -39,23 +37,23 @@ const MainPage: React.FC = () => {
             <div className={styles.blockGrid}>
                 <div>
                     <SecurityScanOutlined className={styles.icon} />
-                    <Text>
+                    <Typography.Text>
                         Позволяет собирать метрики с определенной периодичностью
                         и хранить их продолжительное время
-                    </Text>
+                    </Typography.Text>
                 </div>
                 <div>
                     <FileOutlined className={styles.icon} />
-                    <Text>
+                    <Typography.Text>
                         Позволяет преобразовывать данные и генерировать отчеты
-                    </Text>
+                    </Typography.Text>
                 </div>
                 <div>
                     <InteractionOutlined className={styles.icon} />
-                    <Text>
+                    <Typography.Text>
                         Используются абстракции над источниками данных, возможно
                         создать адаптер для любой системы хранения
-                    </Text>
+                    </Typography.Text>
                 </div>
             </div>
         </Wrapper>
