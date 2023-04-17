@@ -38,11 +38,11 @@
                             "resources": {
                                 "replicas": 2,
                                 "requests": {
-                                    "cpu": "500m",
+                                    "cpu": "250m",
                                     "memory": "512Mi"
                                 },
                                 "limits": {
-                                    "cpu": "500m",
+                                    "cpu": "250m",
                                     "memory": "512Mi"
                                 }
                             }
@@ -109,11 +109,11 @@
                             "resources": {
                                 "replicas": 2,
                                 "requests": {
-                                    "cpu": "500m",
+                                    "cpu": "250m",
                                     "memory": "512Mi"
                                 },
                                 "limits": {
-                                    "cpu": "500m",
+                                    "cpu": "250m",
                                     "memory": "512Mi"
                                 }
                             },
