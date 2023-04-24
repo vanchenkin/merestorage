@@ -69,17 +69,7 @@ export const CreateResourceForm: React.FC<Props> = ({
                 <Input />
             </Form.Item>
 
-            <Form.Item
-                label="Описание"
-                name="description"
-                labelAlign="left"
-                rules={[
-                    {
-                        required: true,
-                        message: "Введите описание ресурса",
-                    },
-                ]}
-            >
+            <Form.Item label="Описание" name="description" labelAlign="left">
                 <Input />
             </Form.Item>
 

@@ -64,11 +64,6 @@ export const ReportRow: React.FC<Props> = ({
                 label="Описание ряда"
                 name={[name, "description"]}
                 labelAlign="left"
-                rules={[
-                    {
-                        message: "Введите описание ряда",
-                    },
-                ]}
             >
                 <Input />
             </Form.Item>

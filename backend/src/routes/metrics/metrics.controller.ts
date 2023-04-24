@@ -120,4 +120,15 @@ export class MetricsController {
             total: await this.metricsService.getMetricDataCount(id),
         };
     }
+
+    /**
+     * Удалить данные по метрике
+     */
+    @Delete("metrics/data")
+    @ApiNotFoundResponse({
+        description: "Данные не найдены",
+    })
+    removeMetricData(@Body() { id }: IdDto): Promise<void> {
+        return this.metricsService.removeMetricData(id);
+    }
 }

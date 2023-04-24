@@ -23,10 +23,11 @@ export class CreateMetricDto {
     })
     readonly name: string;
 
+    @IsOptional()
     @IsString()
     @Trim()
     @IsNotEmpty()
-    readonly description: string;
+    readonly description?: string | undefined;
 
     @IsString()
     @Trim()

@@ -121,6 +121,29 @@ export const metricsApi = createApi({
                 });
             },
         }),
+
+        removeMetricData: builder.mutation<void, Metric["id"]>({
+            query(id) {
+                return {
+                    url: `/metrics/data`,
+                    method: "DELETE",
+                    body: {
+                        id,
+                    },
+                };
+            },
+            invalidatesTags: (_result, _error, id) => [
+                { type: "MetricData", id },
+                { type: "MetricData", id: "PARTIAL-LIST" },
+            ],
+            async onQueryStarted(_, { queryFulfilled }) {
+                queryFulfilled.then(() => {
+                    notification.success({
+                        message: "Успешно",
+                    });
+                });
+            },
+        }),
     }),
 });
 
@@ -131,4 +154,5 @@ export const {
     useUpsertMetricMutation,
     useCollectMetricMutation,
     useGetMetricDataQuery,
+    useRemoveMetricDataMutation,
 } = metricsApi;

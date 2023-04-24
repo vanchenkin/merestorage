@@ -56,17 +56,7 @@ export const ReportForm: React.FC<Props> = ({ form }) => {
                 <Input />
             </Form.Item>
 
-            <Form.Item
-                label="Описание"
-                name="description"
-                labelAlign="left"
-                rules={[
-                    {
-                        required: true,
-                        message: "Введите описание отчета",
-                    },
-                ]}
-            >
+            <Form.Item label="Описание" name="description" labelAlign="left">
                 <Input />
             </Form.Item>
 

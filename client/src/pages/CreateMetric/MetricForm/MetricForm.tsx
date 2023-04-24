@@ -74,17 +74,7 @@ export const MetricForm: React.FC<Props> = ({ form }) => {
                 <Input />
             </Form.Item>
 
-            <Form.Item
-                label="Описание"
-                name="description"
-                labelAlign="left"
-                rules={[
-                    {
-                        required: true,
-                        message: "Введите описание метрики",
-                    },
-                ]}
-            >
+            <Form.Item label="Описание" name="description" labelAlign="left">
                 <Input />
             </Form.Item>
 

@@ -7,10 +7,13 @@ import {
     useCollectMetricMutation,
     useGetAllMetricsQuery,
     useGetMetricDataQuery,
+    useRemoveMetricDataMutation,
 } from "../../store/metrics/metricsApi";
 import { Loader } from "../../components/Loader/Loader";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
 import { getLocalTimestamp } from "../../../../common/utils/getLocalTimestamp";
+import { ConfirmModal } from "../../components/ConfirmModal/ConfirmModal";
+import { MetricData } from "@prisma/client";
 
 const PAGE_COUNT = 15;
 
@@ -30,6 +33,9 @@ export const MetricPage: React.FC = () => {
             page,
             pageCount: PAGE_COUNT,
         });
+
+    const [removeMetric, { isLoading: isLoadingRemove }] =
+        useRemoveMetricDataMutation();
 
     const [collectMetric, { isLoading: isLoadingCollect }] =
         useCollectMetricMutation();
@@ -113,6 +119,17 @@ export const MetricPage: React.FC = () => {
                     align="right"
                     width={110}
                     key="action"
+                    render={(_: unknown, metricData: MetricData) => (
+                        <ConfirmModal
+                            message={`Вы уверены что хотите удалить данные?`}
+                            description="Восстановить их не получится"
+                            onConfirm={() => removeMetric(metricData.id)}
+                        >
+                            <Button type="link" loading={isLoadingRemove}>
+                                Удалить
+                            </Button>
+                        </ConfirmModal>
+                    )}
                 />
             </Table>
         </Wrapper>

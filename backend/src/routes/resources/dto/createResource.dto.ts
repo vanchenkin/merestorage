@@ -2,6 +2,7 @@ import {
     IsEnum,
     IsNotEmpty,
     IsObject,
+    IsOptional,
     IsString,
     ValidateNested,
 } from "class-validator";
@@ -23,7 +24,8 @@ export class CreateResourceDto {
     @IsString()
     @Trim()
     @IsNotEmpty()
-    readonly description: string;
+    @IsOptional()
+    readonly description?: string | undefined;
 
     @IsEnum(ResourceType)
     @ApiProperty({

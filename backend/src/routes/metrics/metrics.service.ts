@@ -164,7 +164,7 @@ export class MetricsService {
             } catch (e) {
                 this.logger.log({ metricId }, "metric consume failed");
 
-                job.done(e as Error);
+                throw e;
             }
         });
     }
@@ -196,5 +196,18 @@ export class MetricsService {
                 },
             },
         });
+    }
+
+    async removeMetricData(id: number): Promise<void> {
+        const metricData = await this.db.metricData.findFirst({
+            where: {
+                id,
+            },
+        });
+        if (!metricData) {
+            throw new NotFoundException("Данные не найдены");
+        }
+
+        await this.db.metricData.delete({ where: { id } });
     }
 }
