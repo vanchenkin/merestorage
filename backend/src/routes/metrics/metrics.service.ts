@@ -35,6 +35,14 @@ export class MetricsService {
         return metric;
     }
 
+    async getByName(name: string): Promise<Metric> {
+        const metric = await this.db.metric.findFirst({ where: { name } });
+        if (!metric) {
+            throw new NotFoundException(`Метрика ${name} не найдена`);
+        }
+        return metric;
+    }
+
     async getByProject(project: Project): Promise<Metric[]> {
         return await this.db.metric.findMany({
             where: { project },
@@ -171,8 +179,8 @@ export class MetricsService {
 
     async getMetricData(
         metricId: number,
-        page: number,
-        pageCount: number
+        page = 1,
+        pageCount = 0
     ): Promise<MetricData[]> {
         return await this.db.metricData.findMany({
             where: {
@@ -181,7 +189,7 @@ export class MetricsService {
                 },
             },
             skip: pageCount * (page - 1),
-            take: pageCount,
+            take: pageCount || undefined,
             orderBy: {
                 createdAt: "desc",
             },

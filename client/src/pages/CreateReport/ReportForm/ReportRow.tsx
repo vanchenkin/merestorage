@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, Form, FormInstance, Input, Select } from "antd";
 import { ReportRowType } from "../../../../../common/types/ReportRowType";
 import { Chart } from "../../../components/ReportVisual/Chart/Chart";
 import { Number } from "../../../components/ReportVisual/Number/Number";
 import { useGetPreviewDataMutation } from "../../../store/reports/reportsApi";
 import { useAppSelector } from "../../../store/store";
-import { ChartResponse } from "../../../../../common/types/reports/responses/ChartResponse";
+import {
+    ChartResponse,
+    ChartValueType,
+} from "../../../../../common/types/reports/responses/ChartResponse";
 import { NumberResponse } from "../../../../../common/types/reports/responses/NumberResponse";
 import { QueryType } from "../../../../../common/types/reports/grammarMapper";
 
@@ -29,6 +32,41 @@ export const ReportRow: React.FC<Props> = ({
     );
 
     const [getPreview, { data, isLoading }] = useGetPreviewDataMutation();
+
+    const transformedData = useMemo(() => {
+        if (!data) return;
+
+        if (data.type === ReportRowType.Number) {
+            return data;
+        }
+
+        if (data.type === ReportRowType.Chart) {
+            const resultValues: ChartValueType = [];
+
+            (data.hit as ChartResponse).forEach((chartValue) => {
+                if (typeof chartValue.value === "object") {
+                    Object.entries(chartValue.value).forEach((entry) => {
+                        resultValues.push({
+                            ...chartValue,
+                            value: entry[1],
+                            type: entry[0],
+                        });
+                    });
+                } else if (typeof chartValue.value === "number") {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    resultValues.push(chartValue);
+                }
+            });
+
+            return {
+                ...data,
+                hit: resultValues,
+            };
+        }
+
+        return undefined;
+    }, [data]);
 
     const handlePreview = (name: number) => {
         const query = form.getFieldValue(["rows", name, "query"]) as QueryType;
@@ -115,23 +153,23 @@ export const ReportRow: React.FC<Props> = ({
                 Предпросмотр
             </Button>
 
-            {data &&
+            {transformedData &&
                 rowType === ReportRowType.Chart &&
-                data.type === rowType && (
+                transformedData.type === rowType && (
                     <Chart
                         name={rowName}
                         description={rowDescription}
-                        values={data.hit as ChartResponse}
+                        values={transformedData.hit as ChartValueType}
                     />
                 )}
 
-            {data &&
+            {transformedData &&
                 rowType === ReportRowType.Number &&
-                data.type === rowType && (
+                transformedData.type === rowType && (
                     <Number
                         name={rowName}
                         description={rowDescription}
-                        value={data.hit as NumberResponse}
+                        value={transformedData.hit as NumberResponse}
                     />
                 )}
         </>

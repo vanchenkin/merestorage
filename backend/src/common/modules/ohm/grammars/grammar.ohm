@@ -1,0 +1,106 @@
+Grammar {
+	Chart =
+		| NumberArr
+		| ObjectArr
+
+	Number =
+    	| Number_add
+
+	Number_add =
+		| Number_add "+" Number_mul -- plus
+		| Number_add "-" Number_mul -- minus
+		| Number_mul
+
+	Number_mul =
+		| Number_mul "*" Number_parsed -- mult
+		| Number_mul "/" Number_parsed -- div
+		| Number_parsed
+
+	Number_parsed =
+		| "(" Number ")" -- parens
+		| Number_other
+		| number
+
+	Number_other =
+		| "sum(" Object ")" -- redSum
+		| "avg(" Object ")" -- redAvg
+		| "min(" Object ")" -- redMin
+		| "max(" Object ")" -- redMax
+		| "median(" Object ")" -- redMedian
+		| "sum(" NumberArr ")" -- aggrSum
+		| "avg(" NumberArr ")" -- aggrAvg
+		| "min(" NumberArr ")" -- aggrMin
+		| "max(" NumberArr ")" -- aggrMax
+		| "median(" NumberArr ")" -- aggrMedian
+
+	number =
+		| digit* "." digit+  -- fract
+		| digit+             -- whole
+
+
+	NumberArr =
+		| Number "+" NumberArr_parsed -- plus_l
+		| Number "-" NumberArr_parsed -- minus_l
+		| Number "*" NumberArr_parsed -- mult_l
+		| Number "/" NumberArr_parsed -- div_l
+		| NumberArr_parsed "+" Number -- plus_r
+		| NumberArr_parsed "-" Number -- minus_r
+		| NumberArr_parsed "*" Number -- mult_r
+		| NumberArr_parsed "/" Number -- div_r
+		| NumberArr_parsed
+
+	NumberArr_parsed =
+		| "(" NumberArr ")" -- parens
+		| NumberArr_other
+		| ident_numberArr
+
+	NumberArr_other =
+		| "sum(" ObjectArr ")" -- aggrSum
+		| "avg(" ObjectArr ")" -- aggrAvg
+		| "min(" ObjectArr ")" -- aggrMin
+		| "max(" ObjectArr ")" -- aggrMax
+		| "median(" ObjectArr ")" -- aggrMedian
+
+	ident_numberArr =
+		| "Number_" alnum*
+
+
+	ObjectArr =
+		| Number "+" ObjectArr_parsed -- plus_l
+		| Number "-" ObjectArr_parsed -- minus_l
+		| Number "*" ObjectArr_parsed -- mult_l
+		| Number "/" ObjectArr_parsed -- div_l
+		| ObjectArr_parsed "+" Number -- plus_r
+		| ObjectArr_parsed "-" Number -- minus_r
+		| ObjectArr_parsed "*" Number -- mult_r
+		| ObjectArr_parsed "/" Number -- div_r
+		| ObjectArr_parsed
+
+	ObjectArr_parsed =
+		| "(" ObjectArr ")" -- parens
+		| ident_objectArr
+
+	ident_objectArr =
+		| "Object_" alnum*
+
+
+	Object =
+		| Number "+" Object_parsed -- plus_l
+		| Number "-" Object_parsed -- minus_l
+		| Number "*" Object_parsed -- mult_l
+		| Number "/" Object_parsed -- div_l
+		| Object_parsed "+" Number -- plus_r
+		| Object_parsed "-" Number -- minus_r
+		| Object_parsed "*" Number -- mult_r
+		| Object_parsed "/" Number -- div_r
+		| Object_parsed
+
+	Object_parsed =
+		| "(" Object ")" -- parens
+		| Object_other
+
+	Object_other =
+		| "sumObject(" ObjectArr ")" -- aggrSum
+		| "minObject(" ObjectArr ")" -- aggrMin
+		| "maxObject(" ObjectArr ")" -- aggrMax
+}

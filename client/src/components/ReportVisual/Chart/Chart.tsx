@@ -1,12 +1,12 @@
 import { Typography } from "antd";
 import React from "react";
 import { Line } from "@ant-design/plots";
+import { ChartValueType } from "../../../../../common/types/reports/responses/ChartResponse";
 
 import styles from "./Chart.module.scss";
-import { ChartValue } from "../../../../../common/types/ChartValue";
 
 type Props = {
-    values: ChartValue[];
+    values: ChartValueType;
     name?: string;
     description?: string;
 };
@@ -16,6 +16,7 @@ export const Chart: React.FC<Props> = ({ values, name, description }) => {
         data: values,
         xField: "date",
         yField: "value",
+        seriesField: "type",
         xAxis: {
             tickCount: 5,
         },

@@ -23,7 +23,6 @@ export class CreateResourceDto {
 
     @IsString()
     @Trim()
-    @IsNotEmpty()
     @IsOptional()
     readonly description?: string | undefined;
 

@@ -1,10 +1,11 @@
 import React from "react";
-import { ChartValue } from "../../../../common/types/ChartValue";
+import { NumberArr } from "../../../../common/types/reports/responses/ChartResponse";
 import { Chart } from "../../components/ReportVisual/Chart/Chart";
 import { Number } from "../../components/ReportVisual/Number/Number";
+import { Wrapper } from "../../components/Wrapper/Wrapper";
 
 export const ReportPage: React.FC = () => {
-    const values: ChartValue[] = [
+    const values: NumberArr = [
         {
             date: "2010-01",
             value: 1998,
@@ -36,16 +37,15 @@ export const ReportPage: React.FC = () => {
     ];
 
     return (
-        <div
+        <Wrapper
             style={{
                 display: "flex",
-                width: "100%",
                 gap: 30,
                 justifyContent: "center",
                 alignItems: "center",
                 flexWrap: "wrap",
-                padding: 50,
-                // backgroundColor: "rgba(0, 0, 0, 0.1)",
+                paddingInline: "10%",
+                paddingBottom: 70,
             }}
         >
             <Number
@@ -79,7 +79,7 @@ export const ReportPage: React.FC = () => {
                 name="Количество записей"
                 description="Полное количество записей за месяц"
             />
-        </div>
+        </Wrapper>
     );
 };
 

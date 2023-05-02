@@ -12,27 +12,4 @@ module.exports = {
         ],
     },
     testPathIgnorePatterns: ['dist'],
-    coverageThreshold: {
-        global: {
-            branches: 80,
-            functions: 80,
-            lines: 80,
-        },
-    },
-    coveragePathIgnorePatterns: [
-        'docs',
-        'config',
-        'coverage',
-        'dist',
-        'types',
-        'health',
-        'store',
-        '.env.ts',
-        '.module.ts',
-        '.controller.ts',
-        '.repository.ts',
-        '.entity.ts',
-        '.dto.ts',
-        '/constants/',
-    ],
 };

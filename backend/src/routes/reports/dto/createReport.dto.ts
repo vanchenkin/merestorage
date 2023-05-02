@@ -18,7 +18,6 @@ export class CreateReportDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @IsNotEmpty()
     readonly description?: string | undefined;
 
     @ValidateNested({ each: true })

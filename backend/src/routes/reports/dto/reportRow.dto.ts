@@ -20,7 +20,6 @@ export class ReportRowDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @IsNotEmpty()
     readonly description?: string | undefined;
 
     @IsEnum(ReportRowType)

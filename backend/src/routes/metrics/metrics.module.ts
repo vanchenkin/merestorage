@@ -13,5 +13,6 @@ import { PgBossService } from "../../common/modules/pgboss/pgboss.service";
         ResourcesService,
         PgBossService,
     ],
+    exports: [MetricsService, ResourcesService],
 })
 export class MetricsModule {}

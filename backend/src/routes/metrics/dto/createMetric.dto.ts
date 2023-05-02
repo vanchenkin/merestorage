@@ -26,7 +26,6 @@ export class CreateMetricDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @IsNotEmpty()
     readonly description?: string | undefined;
 
     @IsString()

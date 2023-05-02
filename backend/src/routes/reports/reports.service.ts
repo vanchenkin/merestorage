@@ -1,17 +1,21 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { Project, Report } from "@prisma/client";
-import { ChartValue } from "../../../../common/types/ChartValue";
 import { ReportRowType } from "../../../../common/types/ReportRowType";
 import { PrismaService } from "../../common/modules/database/prisma.service";
 import { QueryDto } from "./dto/query.dto";
 import { UpsertReportDto } from "./dto/upsertReport.dto";
 import { QueryResponse } from "../../../../common/types/reports/QueryResponse";
+import { NumberArr } from "../../../../common/types/reports/responses/ChartResponse";
+import { OhmService } from "../../common/modules/ohm/ohm.service";
 
 @Injectable()
 export class ReportsService {
     private readonly logger = new Logger(ReportsService.name);
 
-    constructor(private db: PrismaService) {}
+    constructor(
+        private db: PrismaService,
+        private readonly ohmService: OhmService
+    ) {}
 
     async upsert(project: Project, report: UpsertReportDto): Promise<Report> {
         const upsertedReport: Report = await this.db.report.upsert({
@@ -64,8 +68,23 @@ export class ReportsService {
         this.logger.log({ id }, "report removed");
     }
 
+    // TODO: make project checks
     async query(project: Project, query: QueryDto): Promise<QueryResponse> {
-        const values: ChartValue[] = [
+        if (query.type === ReportRowType.Chart) {
+            return {
+                type: query.type,
+                hit: await this.ohmService.evalChart(query.query.string),
+            };
+        } else if (query.type === ReportRowType.Number) {
+            return {
+                type: query.type,
+                hit: await this.ohmService.evalNumber(query.query.string),
+            };
+        }
+
+        throw new NotFoundException("query type not found");
+
+        const values: NumberArr = [
             {
                 date: "2010-01",
                 value: 1998,
