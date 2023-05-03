@@ -10,7 +10,7 @@
         "prebuild": "rimraf dist",
         "build": "yarn run build:back && yarn run build:front",
         "build:back": "cd backend && nest build",
-        "build:front": "cd client && tsc && vite build",
+        "build:front": "cd client && vite build --debug",
         "build:front:visualize": "cd dist/client && vite-bundle-visualizer",
         "deps:update": "ncu -u",
         "prelint:es": "prettier --write \"**/*.{ts,js,tsx}\"",
