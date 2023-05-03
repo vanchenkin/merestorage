@@ -18,6 +18,7 @@ export const Chart: React.FC<Props> = ({
     description,
     loading,
 }) => {
+    console.log(values);
     const config = {
         data: values,
         xField: "date",

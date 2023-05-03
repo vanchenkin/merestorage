@@ -5,7 +5,6 @@ import { PrismaService } from "../../common/modules/database/prisma.service";
 import { QueryDto } from "./dto/query.dto";
 import { UpsertReportDto } from "./dto/upsertReport.dto";
 import { QueryResponse } from "../../../../common/types/reports/QueryResponse";
-import { NumberArr } from "../../../../common/types/reports/responses/ChartResponse";
 import { OhmService } from "../../common/modules/ohm/ohm.service";
 
 @Injectable()
@@ -83,46 +82,5 @@ export class ReportsService {
         }
 
         throw new NotFoundException("query type not found");
-
-        const values: NumberArr = [
-            {
-                date: "2010-01",
-                value: 1998,
-            },
-            {
-                date: "2010-02",
-                value: 1850,
-            },
-            {
-                date: "2010-03",
-                value: 1720,
-            },
-            {
-                date: "2010-04",
-                value: 1818,
-            },
-            {
-                date: "2010-05",
-                value: 1920,
-            },
-            {
-                date: "2010-06",
-                value: 1802,
-            },
-            {
-                date: "2010-07",
-                value: 1945,
-            },
-        ];
-        if (query.type === ReportRowType.Number)
-            return {
-                type: query.type,
-                hit: 200,
-            };
-        else
-            return {
-                type: query.type,
-                hit: values,
-            };
     }
 }

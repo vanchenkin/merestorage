@@ -27,7 +27,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
                 ? exception.getStatus()
                 : HttpStatus.INTERNAL_SERVER_ERROR;
 
-        // format message
         let message;
 
         if (exception instanceof BadRequestException) {

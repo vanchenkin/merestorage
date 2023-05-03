@@ -267,7 +267,9 @@ export class OhmService {
                 );
                 const data = await metricsService.getMetricData(metric.id);
                 return data.map((v) => ({
-                    date: String(v.createdAt),
+                    date: v.createdAt.toLocaleString("ru", {
+                        timeZone: "Europe/Moscow",
+                    }),
                     value: v.data,
                 })) as NumberArr;
             },
@@ -363,7 +365,9 @@ export class OhmService {
                 );
                 const data = await metricsService.getMetricData(metric.id);
                 return data.map((v) => ({
-                    date: String(v.createdAt),
+                    date: v.createdAt.toLocaleString("ru", {
+                        timeZone: "Europe/Moscow",
+                    }),
                     value: v.data,
                 })) as ObjectArr;
             },
@@ -464,11 +468,13 @@ export class OhmService {
     async evalNumber(query: string): Promise<number> {
         const tranformedQuery = await this.transformMetricNames(query);
 
-        // try {
-        return this.semantics(grammar.match(tranformedQuery, "Number")).eval();
-        // } catch (e) {
-        //     throw new BadRequestException(e);
-        // }
+        try {
+            return this.semantics(
+                grammar.match(tranformedQuery, "Number")
+            ).eval();
+        } catch (e) {
+            throw new BadRequestException(e);
+        }
     }
 
     async evalNumberArr(query: string): Promise<NumberArr> {
