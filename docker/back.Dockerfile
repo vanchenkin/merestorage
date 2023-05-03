@@ -2,7 +2,6 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 ARG PORT=3000
-ARG VERBOSE=true
 
 COPY . .
 
@@ -10,8 +9,7 @@ RUN yarn install --immutable
 
 RUN yarn prisma generate && \
     yarn run build:back && \
-    yarn prod-install dist && \
-    ls -lah
+    yarn prod-install dist
 
 FROM node:18-alpine AS runner
 WORKDIR /app

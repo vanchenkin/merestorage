@@ -2,15 +2,13 @@ FROM node:18-alpine AS alpine
 WORKDIR /app
 
 ARG VITE_API_URL
-ARG VERBOSE=true
 
 COPY . .
 
 RUN yarn install --immutable
 
 RUN yarn prisma generate && \
-    yarn run build:front && \
-    ls -lah
+    yarn run build:front
 
 FROM nginx:alpine
 
