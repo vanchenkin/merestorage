@@ -2,6 +2,7 @@ FROM node:18-alpine AS alpine
 WORKDIR /app
 
 ARG VITE_API_URL
+ARG VERBOSE=true
 
 COPY . .
 

@@ -2,6 +2,7 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 ARG PORT=3000
+ARG VERBOSE=true
 
 COPY . .
 
