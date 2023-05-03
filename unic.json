@@ -36,15 +36,7 @@
                             },
                             "dockerFile": "./docker/front.Dockerfile",
                             "resources": {
-                                "replicas": 2,
-                                "requests": {
-                                    "cpu": "250m",
-                                    "memory": "512Mi"
-                                },
-                                "limits": {
-                                    "cpu": "250m",
-                                    "memory": "512Mi"
-                                }
+                                "preset": "static-site"
                             }
                         }
                     ]
@@ -110,11 +102,11 @@
                                 "replicas": 2,
                                 "requests": {
                                     "cpu": "250m",
-                                    "memory": "512Mi"
+                                    "memory": "256Mi"
                                 },
                                 "limits": {
                                     "cpu": "250m",
-                                    "memory": "512Mi"
+                                    "memory": "256Mi"
                                 }
                             },
                             "probes": {

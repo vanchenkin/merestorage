@@ -18,7 +18,7 @@ export const Number: React.FC<Props> = ({ value, name, description }) => {
                 </Typography.Title>
             )}
             <Typography.Title level={1} className={styles.value}>
-                {value}
+                {value.toFixed(2)}
             </Typography.Title>
             {description && (
                 <Typography.Title level={5} className={styles.description}>

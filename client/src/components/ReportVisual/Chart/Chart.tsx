@@ -9,9 +9,15 @@ type Props = {
     values: ChartValueType;
     name?: string;
     description?: string;
+    loading?: boolean;
 };
 
-export const Chart: React.FC<Props> = ({ values, name, description }) => {
+export const Chart: React.FC<Props> = ({
+    values,
+    name,
+    description,
+    loading,
+}) => {
     const config = {
         data: values,
         xField: "date",
@@ -35,7 +41,7 @@ export const Chart: React.FC<Props> = ({ values, name, description }) => {
                 </Typography.Title>
             )}
 
-            <Line {...config} />
+            <Line {...config} loading={loading ?? false} />
         </div>
     );
 };

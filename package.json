@@ -92,7 +92,7 @@
         "rollup-plugin-visualizer": "5.9.0",
         "sass": "1.62.1",
         "source-map-support": "0.5.21",
-        "stylelint": "15.6.0",
+        "stylelint": "15.6.1",
         "stylelint-prettier": "3.0.0",
         "stylelint-scss": "4.6.0",
         "ts-jest": "29.1.0",

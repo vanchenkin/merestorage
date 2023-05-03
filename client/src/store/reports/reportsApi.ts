@@ -24,6 +24,10 @@ export const reportsApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `${Config.ApiUrl}/` }),
     tagTypes: ["Reports"],
     endpoints: (builder) => ({
+        getReport: builder.query<Report, Report["id"]>({
+            query: (reportId) => `/reports/${reportId}`,
+        }),
+
         getAllReports: builder.query<Report[], Project["id"] | null>({
             query: (projectId) => `/projects/${projectId}/reports`,
             providesTags: ["Reports"],
@@ -98,6 +102,7 @@ export const reportsApi = createApi({
 });
 
 export const {
+    useGetReportQuery,
     useGetAllReportsQuery,
     useGetPreviewDataMutation,
     useCreateReportMutation,
