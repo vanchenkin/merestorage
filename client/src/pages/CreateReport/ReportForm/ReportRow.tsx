@@ -24,13 +24,6 @@ export const ReportRow: React.FC<Props> = ({
 }) => {
     const project = useAppSelector((state) => state.context.project);
 
-    const rowType: ReportRowType = Form.useWatch(["rows", name, "type"], form);
-    const rowName: string = Form.useWatch(["rows", name, "name"], form);
-    const rowDescription: string = Form.useWatch(
-        ["rows", name, "description"],
-        form
-    );
-
     const [getPreview, { data, isLoading }] = useGetPreviewDataMutation();
 
     const transformedData = useMemo(() => {
@@ -70,6 +63,11 @@ export const ReportRow: React.FC<Props> = ({
 
     const handlePreview = (name: number) => {
         const query = form.getFieldValue(["rows", name, "query"]) as QueryType;
+        const rowType: ReportRowType = form.getFieldValue([
+            "rows",
+            name,
+            "type",
+        ]);
 
         getPreview({
             query: {
@@ -153,25 +151,52 @@ export const ReportRow: React.FC<Props> = ({
                 Предпросмотр
             </Button>
 
-            {transformedData &&
-                rowType === ReportRowType.Chart &&
-                transformedData.type === rowType && (
-                    <Chart
-                        name={rowName}
-                        description={rowDescription}
-                        values={transformedData.hit as ChartValueType}
-                    />
-                )}
+            {transformedData && (
+                <Form.Item shouldUpdate>
+                    {() => {
+                        const rowType: ReportRowType = form.getFieldValue([
+                            "rows",
+                            name,
+                            "type",
+                        ]);
+                        const rowName: string = form.getFieldValue([
+                            "rows",
+                            name,
+                            "name",
+                        ]);
+                        const rowDescription: string = form.getFieldValue([
+                            "rows",
+                            name,
+                            "description",
+                        ]);
+                        return (
+                            <>
+                                {rowType === ReportRowType.Chart &&
+                                    transformedData.type === rowType && (
+                                        <Chart
+                                            name={rowName}
+                                            description={rowDescription}
+                                            values={
+                                                transformedData.hit as ChartValueType
+                                            }
+                                        />
+                                    )}
 
-            {transformedData &&
-                rowType === ReportRowType.Number &&
-                transformedData.type === rowType && (
-                    <Number
-                        name={rowName}
-                        description={rowDescription}
-                        value={transformedData.hit as NumberResponse}
-                    />
-                )}
+                                {rowType === ReportRowType.Number &&
+                                    transformedData.type === rowType && (
+                                        <Number
+                                            name={rowName}
+                                            description={rowDescription}
+                                            value={
+                                                transformedData.hit as NumberResponse
+                                            }
+                                        />
+                                    )}
+                            </>
+                        );
+                    }}
+                </Form.Item>
+            )}
         </>
     );
 };

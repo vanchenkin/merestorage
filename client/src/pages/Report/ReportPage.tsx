@@ -7,6 +7,9 @@ import { Wrapper } from "../../components/Wrapper/Wrapper";
 import { useGetReportQuery } from "../../store/reports/reportsApi";
 import { ChartHydrated } from "./ChartHydrated";
 import { NumberHydrated } from "./NumberHydrated";
+import { Typography } from "antd";
+
+import styles from "./Report.module.scss";
 
 export const ReportPage: React.FC = () => {
     const reportId = +useParams().reportId!;
@@ -19,29 +22,33 @@ export const ReportPage: React.FC = () => {
         <Wrapper
             style={{
                 display: "flex",
-                gap: 30,
                 justifyContent: "center",
                 alignItems: "center",
-                flexWrap: "wrap",
-                paddingInline: "10%",
-                paddingBottom: 70,
+                flexDirection: "column",
             }}
         >
-            {rows.map((reportRow) =>
-                reportRow.type === ReportRowType.Chart ? (
-                    <ChartHydrated
-                        key={nanoid()}
-                        reportRow={reportRow}
-                        projectId={data?.projectId || 0}
-                    />
-                ) : (
-                    <NumberHydrated
-                        key={nanoid()}
-                        reportRow={reportRow}
-                        projectId={data?.projectId || 0}
-                    />
-                )
-            )}
+            <Typography.Title level={1}>{data?.name}</Typography.Title>
+            <Typography.Title level={3} style={{ marginTop: 0 }}>
+                {data?.description}
+            </Typography.Title>
+
+            <div className={styles.reportWrapper}>
+                {rows.map((reportRow) =>
+                    reportRow.type === ReportRowType.Chart ? (
+                        <ChartHydrated
+                            key={nanoid()}
+                            reportRow={reportRow}
+                            projectId={data?.projectId || 0}
+                        />
+                    ) : (
+                        <NumberHydrated
+                            key={nanoid()}
+                            reportRow={reportRow}
+                            projectId={data?.projectId || 0}
+                        />
+                    )
+                )}
+            </div>
         </Wrapper>
     );
 };

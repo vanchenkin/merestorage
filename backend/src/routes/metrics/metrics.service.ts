@@ -191,7 +191,7 @@ export class MetricsService {
             skip: pageCount * (page - 1),
             take: pageCount || undefined,
             orderBy: {
-                createdAt: "desc",
+                createdAt: "asc",
             },
         });
     }

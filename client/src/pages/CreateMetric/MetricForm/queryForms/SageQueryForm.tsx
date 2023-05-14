@@ -5,7 +5,7 @@ import React from "react";
 export const SageQueryForm: React.FC = () => {
     return (
         <>
-            <Tooltip title="Работает -3h, -5m и тд">
+            <Tooltip title="Работает yesterday и -3h, -5m, и тд">
                 <Form.Item
                     label="Начало"
                     labelAlign="left"
@@ -21,7 +21,7 @@ export const SageQueryForm: React.FC = () => {
                 </Form.Item>
             </Tooltip>
 
-            <Tooltip title="Работает now">
+            <Tooltip title="Работает now и yesterday">
                 <Form.Item
                     label="Конец"
                     labelAlign="left"

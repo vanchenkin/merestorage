@@ -9,7 +9,7 @@ type Props = {
 export const ReportRowManager: React.FC<Props> = ({ form }) => {
     return (
         <Form.List name="rows">
-            {(fields, { add, remove }) => (
+            {(fields, { add, remove, move }) => (
                 <>
                     {fields.map(({ key, ...field }) => (
                         <div key={key}>
@@ -20,6 +20,26 @@ export const ReportRowManager: React.FC<Props> = ({ form }) => {
                             >
                                 Удалить ряд
                             </Button>
+                            {field.name > 0 && (
+                                <Button
+                                    style={{ marginTop: 15, marginBottom: 15 }}
+                                    onClick={() =>
+                                        move(field.name, field.name - 1)
+                                    }
+                                >
+                                    Поднять ряд
+                                </Button>
+                            )}
+                            {field.name < fields.length - 1 && (
+                                <Button
+                                    style={{ marginTop: 15, marginBottom: 15 }}
+                                    onClick={() =>
+                                        move(field.name, field.name + 1)
+                                    }
+                                >
+                                    Опустить ряд
+                                </Button>
+                            )}
                         </div>
                     ))}
 

@@ -58,18 +58,25 @@ export class SageResource implements ResourceInterface<SageQueryType> {
     private getStartTime(start: string): Date {
         let startTime: Date;
 
-        if (start.startsWith("-")) {
+        if (start === "yesterday") {
+            startTime = new Date();
+            startTime.setDate(startTime.getDate() - 1);
+            startTime.setHours(0);
+            startTime.setMinutes(0);
+            startTime.setSeconds(0);
+            startTime.setMilliseconds(0);
+        } else if (start.startsWith("-")) {
             startTime = new Date();
 
             const lastChar = start[start.length - 1];
             const offset = +start.substring(1, start.length - 1);
 
             if (lastChar === "m") {
-                startTime.setMinutes(-offset);
+                startTime.setMinutes(startTime.getMinutes() - offset);
             } else if (lastChar === "h") {
-                startTime.setHours(-offset);
+                startTime.setHours(startTime.getHours() - offset);
             } else if (lastChar === "d") {
-                startTime.setDate(-offset);
+                startTime.setDate(startTime.getDate() - offset);
             } else {
                 startTime = new Date(start);
             }
@@ -82,7 +89,14 @@ export class SageResource implements ResourceInterface<SageQueryType> {
 
     private getEndTime(end: string): Date {
         let endTime: Date;
-        if (end === "now") endTime = new Date();
+        if (end === "yesterday") {
+            endTime = new Date();
+            endTime.setDate(endTime.getDate() - 1);
+            endTime.setHours(23);
+            endTime.setMinutes(59);
+            endTime.setSeconds(59);
+            endTime.setMilliseconds(999);
+        } else if (end === "now") endTime = new Date();
         else endTime = new Date(end);
 
         return endTime;
@@ -93,7 +107,6 @@ export class SageResource implements ResourceInterface<SageQueryType> {
         type: MetricType
     ): Promise<MetricDataType> {
         const startTime = this.getStartTime(query.startTime);
-
         const endTime = this.getEndTime(query.endTime);
 
         const res = await this.fetchApi({
@@ -110,35 +123,50 @@ export class SageResource implements ResourceInterface<SageQueryType> {
         const hits = res.hits as Record<string, unknown>[];
 
         if (type === MetricType.Number) {
-            if (hits.length !== 1)
+            if (hits.length !== 1) {
                 throw new Error("Должен быть только один ряд");
+            }
 
             const values = Object.values(hits[0]);
-            if (values.length !== 1)
+            if (values.length !== 1) {
                 throw new Error("Должна быть только 1 колонка");
+            }
 
             const firstValue = Object.values(values)[0] as number;
 
-            if (isNaN(firstValue)) throw new Error("Не число");
+            if (isNaN(firstValue)) {
+                throw new Error("Не число");
+            }
 
             return firstValue;
         } else if (type === MetricType.Object) {
-            if (Object.values(hits[0]).length !== 2)
+            if (Object.values(hits[0]).length !== 2) {
                 throw new Error("Должно быть только 2 колонки");
+            }
 
             const data = hits.reduce<Record<string, number>>((prev, row) => {
-                const values = Object.values(row);
+                const [firstValue, secondValue] = Object.values(row);
 
-                if (typeof values[1] !== "number") {
+                if (
+                    typeof firstValue !== "number" &&
+                    typeof secondValue !== "number"
+                ) {
                     throw new Error(
-                        "Значения во второй колонке должны быть числами"
+                        "Значения во одной из колонок должны быть числами"
                     );
                 }
 
-                return {
-                    ...prev,
-                    [values[0] as string]: values[1],
-                };
+                if (typeof firstValue === "number") {
+                    return {
+                        ...prev,
+                        [secondValue as string]: firstValue as number,
+                    };
+                } else {
+                    return {
+                        ...prev,
+                        [firstValue as string]: secondValue as number,
+                    };
+                }
             }, {});
 
             return data;

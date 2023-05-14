@@ -22,10 +22,11 @@ export type GetPreviewProps = {
 export const reportsApi = createApi({
     reducerPath: "reportsApi",
     baseQuery: fetchBaseQuery({ baseUrl: `${Config.ApiUrl}/` }),
-    tagTypes: ["Reports"],
+    tagTypes: ["Reports", "Report"],
     endpoints: (builder) => ({
         getReport: builder.query<Report, Report["id"]>({
             query: (reportId) => `/reports/${reportId}`,
+            providesTags: ["Report"],
         }),
 
         getAllReports: builder.query<Report[], Project["id"] | null>({
@@ -59,7 +60,7 @@ export const reportsApi = createApi({
                     body: props.report,
                 };
             },
-            invalidatesTags: ["Reports"],
+            invalidatesTags: ["Reports", "Report"],
             async onQueryStarted(_, { queryFulfilled }) {
                 queryFulfilled.then(() => {
                     notification.success({
@@ -79,7 +80,7 @@ export const reportsApi = createApi({
                     },
                 };
             },
-            invalidatesTags: ["Reports"],
+            invalidatesTags: ["Reports", "Report"],
             async onQueryStarted(_, { queryFulfilled }) {
                 queryFulfilled.then(() => {
                     notification.success({
