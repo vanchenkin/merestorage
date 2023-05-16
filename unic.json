@@ -5,7 +5,7 @@
             "merestorage-front": {
                 "qa": {
                     "name": "merestorage-front",
-                    "namespace": "cobrowsing",
+                    "namespace": "merestorage",
                     "type": "prod",
                     "environment": "yandex-dev",
                     "services": [
@@ -24,7 +24,7 @@
                 },
                 "prod": {
                     "name": "merestorage-front",
-                    "namespace": "cobrowsing",
+                    "namespace": "merestorage",
                     "type": "prod",
                     "environment": "yandex-prod",
                     "services": [
@@ -45,7 +45,7 @@
             "merestorage-back": {
                 "qa": {
                     "name": "merestorage-back",
-                    "namespace": "cobrowsing",
+                    "namespace": "merestorage",
                     "type": "prod",
                     "environment": "yandex-dev",
                     "services": [
@@ -83,7 +83,7 @@
                 },
                 "prod": {
                     "name": "merestorage-back",
-                    "namespace": "cobrowsing",
+                    "namespace": "merestorage",
                     "type": "prod",
                     "environment": "yandex-prod",
                     "services": [
