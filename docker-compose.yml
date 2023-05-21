@@ -15,13 +15,14 @@ services:
       - SECRET_KEY=
       - INIT_VECTOR=
       - SAGE_API=
+    restart: always
   front:
     image: vanchenkin/merestorage:front-latest
     build:
       context: .
       dockerfile: ./docker/front.Dockerfile
       args:
-        VITE_API_URL: http://merestorage.ru/api
+        VITE_API_URL: http://merestorage.ru:3000/api
         NODE_ENV: prod
     restart: always
     ports:
