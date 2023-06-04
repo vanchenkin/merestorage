@@ -16,6 +16,7 @@ export type GetPreviewProps = {
     query: {
         type: ReportRowType;
         query: QueryType;
+        dateRange?: string[];
     };
 };
 

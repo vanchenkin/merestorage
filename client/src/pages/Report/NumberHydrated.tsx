@@ -8,9 +8,14 @@ import { useGetPreviewDataMutation } from "../../store/reports/reportsApi";
 type Props = {
     reportRow: ReportRow;
     projectId: number;
+    dateRange?: string[];
 };
 
-export const NumberHydrated: React.FC<Props> = ({ reportRow, projectId }) => {
+export const NumberHydrated: React.FC<Props> = ({
+    reportRow,
+    projectId,
+    dateRange,
+}) => {
     const [getData, { data }] = useGetPreviewDataMutation();
 
     useEffect(() => {
@@ -19,6 +24,7 @@ export const NumberHydrated: React.FC<Props> = ({ reportRow, projectId }) => {
             query: {
                 type: reportRow.type,
                 query: reportRow.query as QueryType,
+                dateRange,
             },
         });
     }, [reportRow]);

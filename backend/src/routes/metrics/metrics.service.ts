@@ -14,6 +14,7 @@ import { PrismaService } from "../../common/modules/database/prisma.service";
 import { PgBossService } from "../../common/modules/pgboss/pgboss.service";
 import { ResourcesService } from "../resources/resources.service";
 import { UpsertMetricDto } from "./dto/upsertMetric.dto";
+import { GetMetricDataOptions } from "./types/GetMetricDataOptions";
 
 @Injectable()
 export class MetricsService {
@@ -179,13 +180,18 @@ export class MetricsService {
 
     async getMetricData(
         metricId: number,
-        page = 1,
-        pageCount = 0
+        { pageCount = 0, page = 1, startDate, endDate }: GetMetricDataOptions
     ): Promise<MetricData[]> {
         return await this.db.metricData.findMany({
             where: {
                 metric: {
                     id: metricId,
+                },
+                createdAt: {
+                    gte: startDate
+                        ? new Date(startDate).toISOString()
+                        : undefined,
+                    lte: endDate ? new Date(endDate).toISOString() : undefined,
                 },
             },
             skip: pageCount * (page - 1),

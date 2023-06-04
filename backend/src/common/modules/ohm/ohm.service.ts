@@ -293,10 +293,19 @@ export class OhmService {
 
             async ident_numberArr(_1, _2) {
                 const params = this.args.params;
+
                 const metric = await metricsService.getByName(
                     this.sourceString.slice("Number_".length) as string
                 );
-                const data = await metricsService.getMetricData(metric.id);
+                const data = await metricsService.getMetricData(
+                    metric.id,
+                    params.dateRange
+                        ? {
+                              startDate: params.dateRange[0],
+                              endDate: params.dateRange[1],
+                          }
+                        : {}
+                );
                 return data.map((v) => ({
                     date: v.createdAt.toLocaleString("ru", {
                         timeZone: "Europe/Moscow",
@@ -404,7 +413,15 @@ export class OhmService {
                 const metric = await metricsService.getByName(
                     this.sourceString.slice("Object_".length) as string
                 );
-                const data = await metricsService.getMetricData(metric.id);
+                const data = await metricsService.getMetricData(
+                    metric.id,
+                    params.dateRange
+                        ? {
+                              startDate: params.dateRange[0],
+                              endDate: params.dateRange[1],
+                          }
+                        : {}
+                );
                 return data.map((v) => ({
                     date: v.createdAt.toLocaleString("ru", {
                         timeZone: "Europe/Moscow",
@@ -510,13 +527,13 @@ export class OhmService {
         return grammar.match(query, "ObjectArr").message;
     }
 
-    async evalNumber(query: string): Promise<number> {
+    async evalNumber(query: string, dateRange?: string[]): Promise<number> {
         const tranformedQuery = await this.transformMetricNames(query);
 
         try {
             return this.semantics(
                 grammar.match(tranformedQuery, "Number")
-            ).eval({});
+            ).eval({ dateRange });
         } catch (e) {
             throw new BadRequestException(e);
         }
@@ -536,12 +553,17 @@ export class OhmService {
         );
     }
 
-    async evalChart(query: string): Promise<ChartResponse> {
+    async evalChart(
+        query: string,
+        dateRange?: string[]
+    ): Promise<ChartResponse> {
         const tranformedQuery = await this.transformMetricNames(query);
 
         try {
             return this.semantics(grammar.match(tranformedQuery, "Chart")).eval(
-                {}
+                {
+                    dateRange,
+                }
             );
         } catch (e) {
             throw new BadRequestException(e);

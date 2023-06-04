@@ -72,12 +72,18 @@ export class ReportsService {
         if (query.type === ReportRowType.Chart) {
             return {
                 type: query.type,
-                hit: await this.ohmService.evalChart(query.query.string),
+                hit: await this.ohmService.evalChart(
+                    query.query.string,
+                    query.dateRange
+                ),
             };
         } else if (query.type === ReportRowType.Number) {
             return {
                 type: query.type,
-                hit: await this.ohmService.evalNumber(query.query.string),
+                hit: await this.ohmService.evalNumber(
+                    query.query.string,
+                    query.dateRange
+                ),
             };
         }
 

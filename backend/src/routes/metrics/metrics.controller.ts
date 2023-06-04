@@ -116,7 +116,10 @@ export class MetricsController {
         @Query("pageCount", ParseIntPipe) pageCount: number
     ): Promise<{ data: MetricData[]; total: number }> {
         return {
-            data: await this.metricsService.getMetricData(id, page, pageCount),
+            data: await this.metricsService.getMetricData(id, {
+                page,
+                pageCount,
+            }),
             total: await this.metricsService.getMetricDataCount(id),
         };
     }
