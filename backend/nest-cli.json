@@ -1,17 +1,17 @@
 {
-  "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
-  "entryFile": "backend/src/main",
-  "compilerOptions": {
-    "plugins": [
-      {
-        "name": "@nestjs/swagger",
-        "options": {
-          "classValidatorShim": true,
-          "introspectComments": true,
-          "controllerKeyOfComment": "summary"
-        }
-      }
-    ]
-  }
+    "collection": "@nestjs/schematics",
+    "sourceRoot": "src",
+    "entryFile": "backend/src/main",
+    "compilerOptions": {
+        "plugins": [
+            {
+                "name": "@nestjs/swagger",
+                "options": {
+                    "classValidatorShim": true,
+                    "introspectComments": true,
+                    "controllerKeyOfComment": "summary"
+                }
+            }
+        ]
+    }
 }

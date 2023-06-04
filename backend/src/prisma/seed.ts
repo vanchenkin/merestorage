@@ -3,10 +3,12 @@ import { encrypt } from "../common/utils/encrypt";
 import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
+
 async function main() {
     const project = await prisma.project.create({
         data: { name: faker.random.word() },
     });
+
     const resource = await prisma.resource.create({
         data: {
             name: "Postgres",
@@ -17,6 +19,7 @@ async function main() {
             projectId: project.id,
         },
     });
+
     const metricTableCount = await prisma.metric.create({
         data: {
             name: "tableCount",
@@ -28,6 +31,7 @@ async function main() {
             },
         },
     });
+
     const metricTables = await prisma.metric.create({
         data: {
             name: "tables",
@@ -39,6 +43,7 @@ async function main() {
             },
         },
     });
+
     // metric - tablesCount
     for (let i = 0; i < 100; i++) {
         await prisma.metricData.create({
@@ -52,6 +57,7 @@ async function main() {
             },
         });
     }
+
     // metric tables
     const tableNames: string[] = [];
     for (let i = 0; i < 10; i++) {
@@ -74,6 +80,7 @@ async function main() {
         });
     }
 }
+
 main()
     .then(async () => {
         await prisma.$disconnect();

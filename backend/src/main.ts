@@ -24,9 +24,9 @@ const bootstrap = async () => {
     app.setGlobalPrefix("api");
 
     const config = new DocumentBuilder()
-        .setTitle("merestorage")
-        .setDescription("API description")
-        .setVersion("1.0")
+        .setTitle("Merestorage")
+        .setDescription("Описание API")
+        .setVersion("1.0.0")
         .addTag("methods")
         .build();
 

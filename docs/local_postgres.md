@@ -3,9 +3,10 @@
 1. Установить Docker
 2. Создать где-нибудь файл docker-compose.yml
 3. Вставить туда код ниже
-4. Запустить командой ```docker compose up -d```
+4. Запустить командой `docker compose up -d`
 
 ### docker-compose.yml
+
 ```
 version: "3.9"
 services:

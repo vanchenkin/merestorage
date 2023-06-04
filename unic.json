@@ -12,7 +12,7 @@
                         {
                             "name": "app",
                             "envs": {
-                                "VITE_API_URL": "$[ENV:API_URL]",
+                                "VITE_API_URL": "$[ENV:MERESTORAGE_API_URL]",
                                 "NODE_ENV": "dev"
                             },
                             "dockerFile": "./docker/front.Dockerfile",
@@ -31,12 +31,12 @@
                         {
                             "name": "app",
                             "envs": {
-                                "VITE_API_URL": "$[ENV:API_URL_PROD]",
+                                "VITE_API_URL": "$[ENV:MERESTORAGE_API_URL_PROD]",
                                 "NODE_ENV": "prod"
                             },
                             "dockerFile": "./docker/front.Dockerfile",
                             "resources": {
-                                "preset": "static-site"
+                                "replicas": 2
                             }
                         }
                     ]
@@ -99,15 +99,7 @@
                             },
                             "dockerFile": "./docker/back.Dockerfile",
                             "resources": {
-                                "replicas": 2,
-                                "requests": {
-                                    "cpu": "250m",
-                                    "memory": "256Mi"
-                                },
-                                "limits": {
-                                    "cpu": "250m",
-                                    "memory": "256Mi"
-                                }
+                                "replicas": 2
                             },
                             "probes": {
                                 "liveness": {

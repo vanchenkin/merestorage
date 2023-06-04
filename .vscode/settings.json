@@ -1,16 +1,4 @@
 {
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 5433,
-            "driver": "PostgreSQL",
-            "name": "local",
-            "database": "merestorage",
-            "username": "root",
-            "password": "root"
-        }
-    ],
     "search.exclude": {
         "**/.yarn": true,
         "**/.pnp.*": true

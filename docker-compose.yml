@@ -1,29 +1,29 @@
 services:
-  back:
-    image: vanchenkin/merestorage:back-latest
-    build:
-      dockerfile: ./docker/back.Dockerfile
-      context: .
-    ports:
-      - 3000:3000
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    environment:
-      - POSTGRES_URL=postgresql://root:root@host.docker.internal:5432/merestorage
-      - NODE_ENV=prod
-      - PORT=3000
-      - SECRET_KEY=
-      - INIT_VECTOR=
-      - SAGE_API=
-    restart: always
-  front:
-    image: vanchenkin/merestorage:front-latest
-    build:
-      context: .
-      dockerfile: ./docker/front.Dockerfile
-      args:
-        VITE_API_URL: http://merestorage.ru:3000/api
-        NODE_ENV: prod
-    restart: always
-    ports:
-      - 80:3000
+    back:
+        image: vanchenkin/merestorage:back-latest
+        build:
+            dockerfile: ./docker/back.Dockerfile
+            context: .
+        ports:
+            - 3000:3000
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        environment:
+            - POSTGRES_URL=postgresql://root:root@host.docker.internal:5432/merestorage
+            - NODE_ENV=prod
+            - PORT=3000
+            - SECRET_KEY=
+            - INIT_VECTOR=
+            - SAGE_API=
+        restart: always
+    front:
+        image: vanchenkin/merestorage:front-latest
+        build:
+            context: .
+            dockerfile: ./docker/front.Dockerfile
+            args:
+                VITE_API_URL: http://merestorage.ru:3000/api
+                NODE_ENV: prod
+        restart: always
+        ports:
+            - 80:3000
